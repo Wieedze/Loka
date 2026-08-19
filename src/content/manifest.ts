@@ -65,8 +65,13 @@ export function parseManifest(data: unknown): Manifest {
   };
 }
 
+// Sans délai maximum, un réseau saturé — celui d'une salle de jeu — laisse
+// l'attente ouverte indéfiniment et l'appui reste sans effet.
+const DELAI_MAX_MS = 8000;
+
 export async function loadManifest(): Promise<Manifest> {
-  const response = await fetch('/manifest.json');
+  const url = `${import.meta.env.BASE_URL}manifest.json`;
+  const response = await fetch(url, { signal: AbortSignal.timeout(DELAI_MAX_MS) });
   if (!response.ok) throw new Error(`manifest.json: HTTP ${response.status}`);
   const data: unknown = await response.json();
   return parseManifest(data);

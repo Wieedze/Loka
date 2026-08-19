@@ -1,7 +1,7 @@
 # La Loka — Spec V1 (d'après la réponse client du 19/08/2026)
 
 Source : `docs/Reponse_Oddwave_La_Loka_avec_fonctionnement_boutons.pdf` (Dorine & Morgane).
-Cadrage initial : `docs/cadrage-client.md`.
+Cadrage initial : `docs/00-produit/01-cadrage-client.md`.
 
 ## Inventaire audio (fourni par Oddwave, masters WAV)
 

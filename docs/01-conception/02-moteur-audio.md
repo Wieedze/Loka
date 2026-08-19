@@ -18,10 +18,22 @@ poser l'ancre, il n'y a pas de rampe — la valeur saute.
 
 ```js
 // L'ancre : « à cet instant, le volume vaut ceci »
-gain.gain.setValueAtTime(0, ctx.currentTime);
+gain.gain.setValueAtTime(depart, ctx.currentTime);
 // La rampe : « et il vaudra cela dans 3 secondes »
-gain.gain.linearRampToValueAtTime(1, ctx.currentTime + 3);
+gain.gain.exponentialRampToValueAtTime(cible, ctx.currentTime + 3);
 ```
+
+**Exponentielle, pas linéaire.** L'oreille perçoit le volume de façon
+logarithmique : une rampe linéaire de 1 à 0 s'entend comme un son qui reste fort
+puis disparaît d'un coup à la fin — donc comme une coupure, quelle que soit la
+durée. C'est ce qui a fait croire pendant des heures que les fondus ne
+fonctionnaient pas, alors que les mesures montraient une rampe correcte. Une
+exponentielle progresse par pas égaux en décibels et s'entend comme un vrai
+fondu.
+
+Une exponentielle ne peut ni partir de zéro ni y arriver : les fondus voyagent
+entre `GAIN_FLOOR` (0,0008, environ −62 dB, déjà inaudible) et 1, et un vrai zéro
+est posé juste après la fin de la rampe.
 
 Deux pièges de plus, tous deux rencontrés ici :
 

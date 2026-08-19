@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "placeholders": "bash scripts/make-placeholders.sh"
+    "placeholders": "bash scripts/make-placeholders.sh",
+    "check:contenu": "bun scripts/verifier-manifeste.ts"
   },
   "dependencies": {
     "react": "^19.1.1",

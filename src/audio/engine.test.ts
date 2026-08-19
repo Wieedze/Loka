@@ -2,6 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { FakeAudioEnvironment, FakeGainNode } from '../testing/fakeAudio';
 import { flush, installFakeAudio } from '../testing/fakeAudio';
 import { AudioEngine } from './engine';
+import { GAIN_FLOOR } from './ramp';
+
+// Les fondus sont exponentiels : à mi-parcours, moyenne géométrique.
+const mediane = (a: number, b: number): number =>
+  Math.sqrt(Math.max(a, GAIN_FLOOR) * Math.max(b, GAIN_FLOOR));
 
 // Mix values come from the test manifest in fakeAudio.ts.
 const DUCK_LEVEL = 0.25;
@@ -42,7 +47,7 @@ describe("règle 1 — l'ambiance ne s'arrête pas pendant une méditation", () 
     const t = env.context.currentTime;
 
     expect(fond.gain.valueAtTime(t)).toBeCloseTo(1);
-    expect(fond.gain.valueAtTime(t + DUCK_IN / 2)).toBeCloseTo((1 + DUCK_LEVEL) / 2);
+    expect(fond.gain.valueAtTime(t + DUCK_IN / 2)).toBeCloseTo(mediane(1, DUCK_LEVEL), 3);
     expect(fond.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(DUCK_LEVEL);
     // The track itself keeps playing at full level: only the bus dips.
     expect(tfe.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(1);
@@ -73,7 +78,7 @@ describe("règle 1 — l'ambiance ne s'arrête pas pendant une méditation", () 
     const t = env.context.currentTime;
 
     expect(fond.gain.valueAtTime(t)).toBeCloseTo(DUCK_LEVEL);
-    expect(fond.gain.valueAtTime(t + DUCK_OUT / 2)).toBeCloseTo((DUCK_LEVEL + 1) / 2);
+    expect(fond.gain.valueAtTime(t + DUCK_OUT / 2)).toBeCloseTo(mediane(DUCK_LEVEL, 1), 3);
     expect(fond.gain.valueAtTime(t + DUCK_OUT)).toBeCloseTo(1);
     expect(engine.getState().voiceId).toBeNull();
   });
@@ -98,9 +103,45 @@ describe("règle 1 — l'ambiance ne s'arrête pas pendant une méditation", () 
     engine.stopVoice();
 
     expect(voice.gain.valueAtTime(t)).toBeCloseTo(1);
-    expect(voice.gain.valueAtTime(t + VOICE_FADE / 2)).toBeCloseTo(0.5);
+    expect(voice.gain.valueAtTime(t + VOICE_FADE / 2)).toBeCloseTo(mediane(1, 0), 3);
     expect(voice.gain.valueAtTime(t + VOICE_FADE)).toBeCloseTo(0);
     expect(fond.gain.valueAtTime(t + DUCK_OUT)).toBeCloseTo(1);
+  });
+});
+
+describe('le fond finit toujours par remonter', () => {
+  it("relève le fond quand un son non parlé remplace un message parlé", async () => {
+    engine.playAmbiance('tfe');
+    await flush();
+
+    // Message d'accueil : le fond descend.
+    void engine.playOneShot('accueil');
+    await flush();
+    expect(fond.gain.valueAtTime(env.context.currentTime + DUCK_IN)).toBeCloseTo(DUCK_LEVEL, 3);
+
+    // On enchaîne sur le son de passage, qui ne parle pas : personne d'autre
+    // ne relèvera le fond, puisque le message précédent a été coupé.
+    env.advance(DUCK_IN);
+    void engine.playOneShot('lucidite');
+    await flush();
+
+    expect(fond.gain.valueAtTime(env.context.currentTime + DUCK_OUT)).toBeCloseTo(1, 3);
+  });
+
+  it('relève le fond pendant une méditation en pause, et le rebaisse à la reprise', async () => {
+    engine.playAmbiance('tfe');
+    engine.playVoice('med-01');
+    await flush();
+    env.advance(DUCK_IN);
+    expect(fond.gain.valueAtTime(env.context.currentTime)).toBeCloseTo(DUCK_LEVEL, 3);
+
+    engine.pauseVoice();
+    expect(fond.gain.valueAtTime(env.context.currentTime + DUCK_OUT)).toBeCloseTo(1, 3);
+
+    env.advance(DUCK_OUT);
+    engine.resumeVoice();
+    await flush();
+    expect(fond.gain.valueAtTime(env.context.currentTime + DUCK_IN)).toBeCloseTo(DUCK_LEVEL, 3);
   });
 });
 
@@ -116,7 +157,7 @@ describe('règle 2 — les mantras se superposent, un seul à la fois', () => {
     const mantra = env.lastGain();
     await flush();
 
-    expect(mantra.gain.valueAtTime(t)).toBeCloseTo(0);
+    expect(mantra.gain.valueAtTime(t)).toBeCloseTo(GAIN_FLOOR, 4);
     expect(mantra.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
     // The ambiance is untouched: superposition, not replacement.
     expect(tfe.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
@@ -136,7 +177,7 @@ describe('règle 2 — les mantras se superposent, un seul à la fois', () => {
 
     expect(first.gain.valueAtTime(t)).toBeCloseTo(1);
     expect(first.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(0);
-    expect(second.gain.valueAtTime(t)).toBeCloseTo(0);
+    expect(second.gain.valueAtTime(t)).toBeCloseTo(GAIN_FLOOR, 4);
     expect(second.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
     expect(engine.getState().mantraId).toBe('mantra-02');
   });
@@ -195,8 +236,8 @@ describe("le fondu part du moment où le son sort vraiment", () => {
     await flush();
 
     // Le fondu ne doit pas être déjà terminé : il commence maintenant.
-    expect(tfe.gain.valueAtTime(demarrage)).toBeCloseTo(0);
-    expect(tfe.gain.valueAtTime(demarrage + CROSSFADE / 2)).toBeCloseTo(0.5);
+    expect(tfe.gain.valueAtTime(demarrage)).toBeCloseTo(GAIN_FLOOR, 4);
+    expect(tfe.gain.valueAtTime(demarrage + CROSSFADE / 2)).toBeCloseTo(mediane(0, 1), 3);
     expect(tfe.gain.valueAtTime(demarrage + CROSSFADE)).toBeCloseTo(1);
   });
 });
@@ -215,8 +256,8 @@ describe('règle 4 — le passage Lucidité est un fondu enchaîné', () => {
 
     expect(tfe.gain.valueAtTime(t)).toBeCloseTo(1);
     expect(tfe.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(0);
-    expect(air.gain.valueAtTime(t)).toBeCloseTo(0);
-    expect(air.gain.valueAtTime(t + CROSSFADE / 2)).toBeCloseTo(0.5);
+    expect(air.gain.valueAtTime(t)).toBeCloseTo(GAIN_FLOOR, 4);
+    expect(air.gain.valueAtTime(t + CROSSFADE / 2)).toBeCloseTo(mediane(0, 1), 3);
     expect(air.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
     expect(engine.getState().ambianceId).toBe('air');
   });
@@ -242,8 +283,8 @@ describe('règle 4 — le passage Lucidité est un fondu enchaîné', () => {
     await flush();
     const t = env.context.currentTime;
 
-    expect(tfe.gain.valueAtTime(t)).toBeCloseTo(0);
-    expect(tfe.gain.valueAtTime(t + CROSSFADE / 2)).toBeCloseTo(0.5);
+    expect(tfe.gain.valueAtTime(t)).toBeCloseTo(GAIN_FLOOR, 4);
+    expect(tfe.gain.valueAtTime(t + CROSSFADE / 2)).toBeCloseTo(mediane(0, 1), 3);
     expect(tfe.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
   });
 
@@ -291,7 +332,7 @@ describe('règle 5 — la Porte prend le relais', () => {
     engine.playAmbiance('renouveau');
     const renouveau = env.lastGain();
     await flush();
-    expect(renouveau.gain.valueAtTime(t)).toBeCloseTo(0);
+    expect(renouveau.gain.valueAtTime(t)).toBeCloseTo(GAIN_FLOOR, 4);
     expect(renouveau.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
   });
 });

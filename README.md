@@ -1,7 +1,7 @@
 # La Loka
 
 Compagnon audio du jeu La Loka — web app mobile (React + Vite + Web Audio).
-Références : `docs/architecture.md`, `docs/spec-v1.md`.
+Références : `docs/01-conception/01-architecture.md`, `docs/00-produit/02-spec-v1.md`.
 
 ## Prérequis
 

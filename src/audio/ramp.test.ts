@@ -1,17 +1,25 @@
 import { describe, expect, it } from 'vitest';
 import { FakeAudioParam } from '../testing/fakeAudio';
-import { clampGain, GainRamp, loopCrossfadeStart, rampValueAt } from './ramp';
+import { clampGain, GAIN_FLOOR, GainRamp, loopCrossfadeStart, rampValueAt } from './ramp';
+
+// Défini une rampe exponentielle : à mi-parcours on est à la moyenne
+// géométrique des deux bouts, pas à la moyenne arithmétique.
+const mediane = (a: number, b: number): number =>
+  Math.sqrt(Math.max(a, GAIN_FLOOR) * Math.max(b, GAIN_FLOOR));
 
 // The fake records automation events; only the scheduling surface matters here.
 const asParam = (param: FakeAudioParam): AudioParam => param as unknown as AudioParam;
 
 describe('rampValueAt', () => {
-  it('interpolates linearly between the two ends', () => {
+  it('progresse par pas égaux en décibels, pas en amplitude', () => {
     const state = { from: 0, to: 1, startTime: 10, endTime: 14 };
     expect(rampValueAt(state, 10)).toBe(0);
-    expect(rampValueAt(state, 11)).toBeCloseTo(0.25);
-    expect(rampValueAt(state, 12)).toBeCloseTo(0.5);
+    expect(rampValueAt(state, 12)).toBeCloseTo(mediane(0, 1), 4);
     expect(rampValueAt(state, 14)).toBe(1);
+    // Chaque quart de temps multiplie le gain par le même facteur.
+    const q1 = rampValueAt(state, 11) / rampValueAt(state, 10.0001);
+    const q2 = rampValueAt(state, 12) / rampValueAt(state, 11);
+    expect(q2).toBeCloseTo(q1, 1);
   });
 
   it('holds the ends outside the ramp window', () => {
@@ -41,8 +49,8 @@ describe('GainRamp', () => {
 
     ramp.to(1, 0, 3);
 
-    expect(param.valueAtTime(0)).toBeCloseTo(0);
-    expect(param.valueAtTime(1.5)).toBeCloseTo(0.5);
+    expect(param.valueAtTime(0)).toBeCloseTo(GAIN_FLOOR, 4);
+    expect(param.valueAtTime(1.5)).toBeCloseTo(mediane(0, 1), 4);
     expect(param.valueAtTime(3)).toBeCloseTo(1);
   });
 
@@ -65,11 +73,12 @@ describe('GainRamp', () => {
 
     ramp.to(0, 0, 4);
     // Half way down, ask to come back up.
+    const atteint = mediane(1, 0);
     ramp.to(1, 2, 2);
 
-    expect(ramp.valueAt(2)).toBeCloseTo(0.5);
-    expect(param.valueAtTime(2)).toBeCloseTo(0.5);
-    expect(param.valueAtTime(3)).toBeCloseTo(0.75);
+    expect(ramp.valueAt(2)).toBeCloseTo(atteint, 4);
+    expect(param.valueAtTime(2)).toBeCloseTo(atteint, 4);
+    expect(param.valueAtTime(3)).toBeCloseTo(mediane(atteint, 1), 3);
     expect(param.valueAtTime(4)).toBeCloseTo(1);
   });
 
