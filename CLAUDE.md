@@ -3,15 +3,18 @@
 Application web compagnon sonore du jeu de plateau La Loka (client : Oddwave Studio).
 Accès par QR code sur la boîte du jeu.
 
-**À lire avant de toucher au son : `docs/journal/erreurs.md`** — les pièges déjà
+**À lire avant de toucher au son : `docs/03-postmortems/`** — les pièges déjà
 rencontrés, avec leur cause racine. Plusieurs ont survécu à une suite de tests verte.
 
 | Sujet | Document |
 |---|---|
-| Ce que l'app doit faire | `docs/spec-v1.md` |
-| Enchaînements sonores, variables temporelles, déclencheurs | `docs/son.md` |
-| Stack et décisions techniques | `docs/architecture.md` |
-| Contexte, décisions, questions en attente | `docs/journal/` |
+| Ce que l'app doit faire | `docs/00-produit/02-spec-v1.md` |
+| Enchaînements sonores, variables temporelles, déclencheurs | `docs/01-conception/02-moteur-audio.md` |
+| Stack et décisions techniques | `docs/01-conception/01-architecture.md` |
+| Pourquoi tel choix technique | `docs/02-decisions/` |
+| Ce qui a mal tourné, et la leçon | `docs/03-postmortems/`, `docs/04-lecons/` |
+| Contexte, reste à faire | `docs/05-journal/` |
+| Questions en attente côté client | `docs/00-produit/03-questions-ouvertes.md` |
 | Vérifier un fondu pour de vrai | `tools/README.md` |
 
 ## Règle d'environnement — droits des fichiers
@@ -52,7 +55,7 @@ bunx vitest run
   premier — c'est ce qui avait silencieusement désactivé tous les fondus de l'app.
 - Le moteur (`src/audio/`) et la machine d'état (`src/journey/`) sont du TypeScript pur, sans
   React ni DOM (hors `<audio>`) : c'est ce qui les rend testables.
-- **Les règles de mixage de `docs/spec-v1.md` sont couvertes une par une par
+- **Les règles de mixage de `docs/00-produit/02-spec-v1.md` sont couvertes une par une par
   `src/audio/engine.test.ts`**, qui rejoue les automations de gain sur un faux AudioContext.
   Toute modification du mixage doit garder ces tests verts — ils sont la spec exécutable.
   **Mais ils ne prouvent pas que le son est bon** : ils vérifient ce qui est *planifié*, pas ce

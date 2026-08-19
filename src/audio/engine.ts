@@ -31,6 +31,14 @@ interface AmbianceChannel {
 // Transitions (porte, lucidité) are sound design and play at full level.
 const SPOKEN_ROLES: readonly TrackRole[] = ['jingle', 'meditation', 'cloture'];
 
+// Sur iOS, le son d'une page est coupé par l'interrupteur silencieux tant que
+// la page n'a pas déclaré son intention. Le téléphone est posé sur une table :
+// personne ne pensera à vérifier ce petit interrupteur.
+function declareSessionAudio(): void {
+  const session = (navigator as { audioSession?: { type: string } }).audioSession;
+  if (session) session.type = 'playback';
+}
+
 const STOP_MARGIN_SEC = 0.1;
 const LOOP_POLL_MS = 250;
 // Re-pressing a button must not leave two copies of the same voice overlapping:
@@ -63,6 +71,7 @@ export class AudioEngine {
       const fond = ctx.createGain();
       fond.connect(ctx.destination);
       this.graph = { ctx, fond, fondRamp: new GainRamp(fond.gain, 1) };
+      declareSessionAudio();
     }
     if (!this.manifest) {
       this.manifest = await loadManifest();
@@ -127,25 +136,29 @@ export class AudioEngine {
     player.onEnded = () => {
       if (this.voice !== player) return;
       this.voice = null;
-      this.updateDuck(manifest.mix.duckOutSec);
       this.setState({ voiceId: null, voicePaused: false });
+      this.updateDuck();
     };
     this.voice = player;
-    this.updateDuck(manifest.mix.duckInSec);
     this.setState({ voiceId: id, voicePaused: false });
+    this.updateDuck();
     player.play().catch(() => player.onEnded?.());
   }
 
+  // Une méditation en pause n'est plus une voix : le fond doit remonter, sinon
+  // le groupe discute sur une ambiance étouffée sans que rien ne parle.
   pauseVoice(): void {
     if (!this.voice) return;
     this.voice.pause();
     this.setState({ voicePaused: true });
+    this.updateDuck();
   }
 
   resumeVoice(): void {
     const player = this.voice;
     if (!player) return;
     this.setState({ voicePaused: false });
+    this.updateDuck();
     player.play().catch(() => player.onEnded?.());
   }
 
@@ -154,8 +167,8 @@ export class AudioEngine {
     if (!this.voice) return;
     this.fadeOutAndStop(this.voice, manifest.mix.voiceFadeSec);
     this.voice = null;
-    this.updateDuck(manifest.mix.duckOutSec);
     this.setState({ voiceId: null, voicePaused: false });
+    this.updateDuck();
   }
 
   playMantra(id: string): void {
@@ -179,7 +192,7 @@ export class AudioEngine {
   // renouveau). A one-shot interrupted by a new one never settles, which is
   // what stops an interrupted chain from running twice.
   playOneShot(id: string): Promise<void> {
-    const { graph, manifest } = this.mustReady();
+    const { graph } = this.mustReady();
     const track = this.mustTrack(id);
     if (this.oneShot) this.fadeOutAndStop(this.oneShot.player, CUT_FADE_SEC);
 
@@ -187,12 +200,14 @@ export class AudioEngine {
     const player = new BufferPlayer(graph.ctx, trackUrl(track), graph.ctx.destination);
     const entry = { player, ducks };
     this.oneShot = entry;
-    if (ducks) this.updateDuck(manifest.mix.duckInSec);
+    // Sans condition : un message non parlé qui en remplace un parlé doit
+    // relever le fond, sinon plus rien ne le fera.
+    this.updateDuck();
 
     const finish = (): void => {
       if (this.oneShot !== entry) return;
       this.oneShot = null;
-      if (ducks) this.updateDuck(manifest.mix.duckOutSec);
+      this.updateDuck();
     };
     return new Promise((resolve, reject) => {
       player.onEnded = () => {
@@ -268,12 +283,16 @@ export class AudioEngine {
     }, (fadeSec + STOP_MARGIN_SEC) * 1000);
   }
 
-  // Single source of truth for the duck level: several spoken sources can
-  // overlap, and the last one to finish must be the one that lifts it.
-  private updateDuck(seconds: number): void {
+  // Seule source de vérité du ducking : la cible ET la durée se déduisent de
+  // l'état. Laisser la durée à l'appelant, c'était six endroits où se tromper —
+  // et deux s'y trompaient, laissant le fond étouffé pour le reste de la partie.
+  private updateDuck(): void {
     const { graph, manifest } = this.mustReady();
-    const ducked = this.voice !== null || this.oneShot?.ducks === true;
-    graph.fondRamp.to(ducked ? manifest.mix.duckLevel : 1, graph.ctx.currentTime, seconds);
+    const parle = (this.voice !== null && !this.state.voicePaused) || this.oneShot?.ducks === true;
+    const cible = parle ? manifest.mix.duckLevel : 1;
+    const now = graph.ctx.currentTime;
+    const descend = cible < graph.fondRamp.valueAt(now);
+    graph.fondRamp.to(cible, now, descend ? manifest.mix.duckInSec : manifest.mix.duckOutSec);
   }
 
   private mustReady(): { graph: Graph; manifest: Manifest } {

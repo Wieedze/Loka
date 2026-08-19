@@ -3,7 +3,7 @@
 // instead of only asserting that a method was called.
 
 interface ParamEvent {
-  type: 'set' | 'ramp';
+  type: 'set' | 'ramp' | 'expo';
   value: number;
   time: number;
 }
@@ -24,6 +24,10 @@ export class FakeAudioParam {
     this.events.push({ type: 'ramp', value, time });
   }
 
+  exponentialRampToValueAtTime(value: number, time: number): void {
+    this.events.push({ type: 'expo', value, time });
+  }
+
   // Value the audio thread would output at `time`, interpolating ramps.
   valueAtTime(time: number): number {
     const events = [...this.events].sort((a, b) => a.time - b.time);
@@ -35,10 +39,14 @@ export class FakeAudioParam {
         currentTime = event.time;
         continue;
       }
+      const span = event.time - currentTime;
       if (event.type === 'ramp') {
-        const span = event.time - currentTime;
         if (span <= 0) return event.value;
         return current + (event.value - current) * ((time - currentTime) / span);
+      }
+      if (event.type === 'expo') {
+        if (span <= 0 || current <= 0) return event.value;
+        return current * Math.pow(event.value / current, (time - currentTime) / span);
       }
       return current;
     }
