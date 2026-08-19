@@ -106,33 +106,42 @@ Toute piste vient de `manifest.json` — ajouter une méditation d'extension = a
 
 ## Arborescence
 
+Ce qui existe aujourd'hui :
+
 ```
 src/
-  audio/        # moteur pur TS : engine.ts, players.ts, buses, ducking
-  journey/      # machine d'état des phases + overlays
-  content/      # types + chargement du manifest.json
-  preload/      # PreloadManager (Cache API, progression)
+  audio/        # moteur pur TS : engine.ts, players.ts, ramp.ts
+  journey/      # machine d'état des phases
+  content/      # types + chargement et validation du manifest.json
   system/       # wakeLock.ts, visibility.ts
   ui/
-    screens/    # Chargement / Accueil / Voyage
-    components/ # BoutonRituel, ChoixMeditation, …
-  styles/       # tokens.css (charte Claude Design), base.css
+    screens/    # Accueil, Voyage
+    components/ # Spirale, Noeud, Glyphe
+    hooks/      # useEngine (useSyncExternalStore)
+  styles/       # tokens.css (charte à venir), base.css
+  testing/      # faux AudioContext, pour les tests du moteur
+  diagnostic/   # page /diagnostic, hors application
 public/
   manifest.json
-  audio/        # placeholders en dev ; en prod servi par R2
-audio-src/      # masters WAV (hors git)
+  audio/        # placeholders de dev (hors git)
 scripts/
-  encode.sh     # WAV → m4a (ffmpeg), placeholders de dev
-functions/
-  audio/[[path]].ts   # Pages Function → binding R2 (prod)
+  make-placeholders.sh   # tons tenus générés par ffmpeg
+tools/
+  mesure-enveloppe.ts    # mesure d'un fondu dans un vrai navigateur
 docs/
 ```
 
-## Écrans (3 seulement)
+Prévu, pas encore écrit — ne pas s'étonner de l'absence : `src/preload/`
+(PreloadManager, Cache API), `functions/audio/[[path]].ts` (Pages Function vers
+R2), `audio-src/` (masters WAV livrés par Oddwave), `scripts/encode.sh`
+(WAV → m4a).
 
-1. **Chargement** — premier lancement : téléchargement avec progression ; ensuite instantané.
-2. **Accueil** — bouton « Commencement » (spirale) : déclenche le jingle ET débloque l'audio.
-3. **Voyage** — l'écran unique de jeu : les 6 boutons, indication discrète de ce qui joue, choix des 10 méditations en panneau (lotus).
+## Écrans
+
+1. **Accueil** — la spirale : déclenche le jingle **et** débloque l'audio.
+2. **Voyage** — l'écran de jeu : le mandala, ce qui joue, les panneaux de choix.
+
+Un troisième écran de **chargement** viendra avec le préchargement (jalon 3).
 
 ## Risques identifiés & parades
 
