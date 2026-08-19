@@ -88,5 +88,32 @@
       "title": "Mantra III",
       "file": "audio/mantra-03.m4a"
     }
+  ],
+  "elements": [
+    {
+      "id": "terre",
+      "titre": "Terre",
+      "texte": "La bande-son du voyage. Elle accompagne toute la traversée et se répète tant que dure la partie.",
+      "piste": "tfe"
+    },
+    {
+      "id": "feu",
+      "titre": "Feu",
+      "texte": "La même traversée, vue depuis le Sud. Terre, Feu et Eau partagent une seule bande-son.",
+      "piste": "tfe"
+    },
+    {
+      "id": "eau",
+      "titre": "Eau",
+      "texte": "La même traversée, vue depuis l'Ouest. Les gouttes du plateau marquent cette direction.",
+      "piste": "tfe"
+    },
+    {
+      "id": "air",
+      "titre": "Air",
+      "texte": "Le passage de Lucidité : le Gardien du Seuil ouvre l'entre-deux-mondes, puis l'univers de l'Air s'installe.",
+      "piste": "air",
+      "passage": "lucidite"
+    }
   ]
 }

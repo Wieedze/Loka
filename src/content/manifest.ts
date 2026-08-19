@@ -1,4 +1,4 @@
-import type { Manifest, MixConfig, Track, TrackRole } from './types';
+import type { ElementPreset, Manifest, MixConfig, Track, TrackRole } from './types';
 
 const ROLES: readonly TrackRole[] = ['jingle', 'ambiance', 'meditation', 'mantra', 'transition', 'cloture'];
 
@@ -53,16 +53,39 @@ function parseTrack(value: unknown, path: string): Track {
   return track;
 }
 
+function parseElement(value: unknown, path: string): ElementPreset {
+  if (!isRecord(value)) fail(path, 'must be an object');
+  const preset: ElementPreset = {
+    id: asString(value.id, `${path}.id`),
+    titre: asString(value.titre, `${path}.titre`),
+    texte: asString(value.texte, `${path}.texte`),
+    piste: asString(value.piste, `${path}.piste`),
+  };
+  if (value.passage !== undefined) preset.passage = asString(value.passage, `${path}.passage`);
+  return preset;
+}
+
 export function parseManifest(data: unknown): Manifest {
   if (!isRecord(data)) fail('(root)', 'must be an object');
   const tracksRaw = data.tracks;
   if (!Array.isArray(tracksRaw)) fail('tracks', 'must be an array');
-  const items: readonly unknown[] = tracksRaw;
-  return {
-    version: asNumber(data.version, 'version'),
-    mix: parseMix(data.mix),
-    tracks: items.map((item, index) => parseTrack(item, `tracks[${index}]`)),
-  };
+  const elementsRaw = data.elements;
+  if (!Array.isArray(elementsRaw)) fail('elements', 'must be an array');
+
+  const tracks = (tracksRaw as readonly unknown[]).map((item, i) => parseTrack(item, `tracks[${i}]`));
+  const elements = (elementsRaw as readonly unknown[]).map((item, i) => parseElement(item, `elements[${i}]`));
+
+  // Un preset qui pointe vers une piste absente casserait un bouton en silence :
+  // mieux vaut refuser le manifeste tout de suite, avec le nom fautif.
+  const connus = new Set(tracks.map((t) => t.id));
+  for (const [i, element] of elements.entries()) {
+    if (!connus.has(element.piste)) fail(`elements[${i}].piste`, `refers to an unknown track: "${element.piste}"`);
+    if (element.passage !== undefined && !connus.has(element.passage)) {
+      fail(`elements[${i}].passage`, `refers to an unknown track: "${element.passage}"`);
+    }
+  }
+
+  return { version: asNumber(data.version, 'version'), mix: parseMix(data.mix), tracks, elements };
 }
 
 // Sans délai maximum, un réseau saturé — celui d'une salle de jeu — laisse

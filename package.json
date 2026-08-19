@@ -13,6 +13,7 @@
     "check:contenu": "bun scripts/verifier-manifeste.ts"
   },
   "dependencies": {
+    "gsap": "^3.15.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

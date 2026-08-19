@@ -17,8 +17,20 @@ export interface MixConfig {
   voiceFadeSec: number;
 }
 
+/** Ce qu'une page d'élément affiche et déclenche. */
+export interface ElementPreset {
+  id: string;
+  titre: string;
+  texte: string;
+  /** Ambiance lancée en ouvrant la page. */
+  piste: string;
+  /** Son de passage joué par-dessus l'entrée, s'il y en a un. */
+  passage?: string;
+}
+
 export interface Manifest {
   version: number;
   mix: MixConfig;
   tracks: Track[];
+  elements: ElementPreset[];
 }

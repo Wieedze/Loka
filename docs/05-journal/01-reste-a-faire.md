@@ -80,7 +80,13 @@ et dans `stop()` : `mediaSource.disconnect()`, `audio.removeAttribute('src')`,
 
 ## Ce qui casse à la première extension
 
-### 7. Sept identifiants de pistes en dur dans l'interface
+### 7. Identifiants de pistes en dur dans l'interface — *partiellement corrigé*
+
+**Corrigé pour les quatre éléments** : leurs pistes viennent désormais du
+manifeste, via les presets ([ADR 0017](../02-decisions/0017-pages-d-element-pilotees-par-preset.md)),
+et `parseManifest` refuse un preset pointant vers une piste absente. Restent en
+dur `'accueil'`, `'porte'`, `'renouveau'` et `'cloture'`, qui appellent le même
+traitement.
 
 `Voyage.tsx` connaît `'tfe'`, `'air'`, `'accueil'`, `'lucidite'`, `'porte'`,
 `'renouveau'`, `'cloture'`. Renommer un identifiant dans le manifeste casse un

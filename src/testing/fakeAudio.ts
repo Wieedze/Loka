@@ -198,6 +198,10 @@ const MANIFEST = {
     { id: 'mantra-01', role: 'mantra', title: 'Mantra I', file: 'audio/mantras/01.m4a' },
     { id: 'mantra-02', role: 'mantra', title: 'Mantra II', file: 'audio/mantras/02.m4a' },
   ],
+  elements: [
+    { id: 'terre', titre: 'Terre', texte: 'La bande-son du voyage.', piste: 'tfe' },
+    { id: 'air', titre: 'Air', texte: 'Le passage de Lucidité.', piste: 'air', passage: 'lucidite' },
+  ],
 };
 
 export function installFakeAudio(): FakeAudioEnvironment {

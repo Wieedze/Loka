@@ -1,11 +1,12 @@
 import { loadManifest, trackUrl } from '../content/manifest';
-import type { Manifest, Track, TrackRole } from '../content/types';
+import type { ElementPreset, Manifest, Track, TrackRole } from '../content/types';
 import type { Player } from './players';
 import { BufferPlayer, StreamPlayer } from './players';
 import { GainRamp, loopCrossfadeStart } from './ramp';
 
 export interface EngineState {
   readonly ambianceId: string | null;
+  readonly ambiancePaused: boolean;
   readonly voiceId: string | null;
   readonly voicePaused: boolean;
   readonly mantraId: string | null;
@@ -52,7 +53,13 @@ export class AudioEngine {
   private voice: StreamPlayer | null = null;
   private mantra: BufferPlayer | null = null;
   private oneShot: { player: BufferPlayer; ducks: boolean } | null = null;
-  private state: EngineState = { ambianceId: null, voiceId: null, voicePaused: false, mantraId: null };
+  private state: EngineState = {
+    ambianceId: null,
+    ambiancePaused: false,
+    voiceId: null,
+    voicePaused: false,
+    mantraId: null,
+  };
   private readonly listeners = new Set<() => void>();
 
   subscribe = (listener: () => void): (() => void) => {
@@ -86,6 +93,10 @@ export class AudioEngine {
     if (ctx && ctx.state !== 'running') await ctx.resume();
   }
 
+  elements(): ElementPreset[] {
+    return this.manifest?.elements ?? [];
+  }
+
   tracks(role: TrackRole): Track[] {
     return this.manifest?.tracks.filter((track) => track.role === role) ?? [];
   }
@@ -114,7 +125,7 @@ export class AudioEngine {
       channel.loopTimer = window.setInterval(() => void this.rotateLoopIfNeeded(channel), LOOP_POLL_MS);
     }
     this.ambiance = channel;
-    this.setState({ ambianceId: id });
+    this.setState({ ambianceId: id, ambiancePaused: false });
     player.play(fade).catch(() => player.onEnded?.());
   }
 
@@ -124,7 +135,22 @@ export class AudioEngine {
     if (!this.ambiance) return;
     this.releaseAmbiance(this.ambiance, manifest.mix.crossfadeSec);
     this.ambiance = null;
-    this.setState({ ambianceId: null });
+    this.setState({ ambianceId: null, ambiancePaused: false });
+  }
+
+  // Suspend l'ambiance sans la démonter : la reprise repart où elle en était.
+  pauseAmbiance(): void {
+    const channel = this.ambiance;
+    if (!channel || this.state.ambiancePaused) return;
+    channel.player.pause();
+    this.setState({ ambiancePaused: true });
+  }
+
+  resumeAmbiance(): void {
+    const channel = this.ambiance;
+    if (!channel || !this.state.ambiancePaused) return;
+    this.setState({ ambiancePaused: false });
+    channel.player.play().catch(() => channel.player.onEnded?.());
   }
 
   playVoice(id: string): void {
@@ -229,7 +255,7 @@ export class AudioEngine {
       if (this.ambiance !== channel || channel.player !== player) return;
       this.stopLoopTimer(channel);
       this.ambiance = null;
-      this.setState({ ambianceId: null });
+      this.setState({ ambianceId: null, ambiancePaused: false });
     };
   }
 
