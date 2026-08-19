@@ -7,7 +7,7 @@
 | `main` | Ce qui est en ligne. On n'y pousse jamais directement : elle ne reçoit que des fusions de `dev`. |
 | `dev` | Intégration. Toutes les fonctionnalités y arrivent avant d'être publiées. |
 | `feat/*` | Une fonctionnalité, partie de `dev` et fusionnée dans `dev`. |
-| `fix/*` | Une correction, même circuit. |
+| `fix/*`, `refactor/*`, `docs/*`, `chore/*` | Même circuit, préfixe assorti au type de travail. |
 
 ```bash
 git switch dev
@@ -32,9 +32,9 @@ git push origin main --tags
 
 ## Intégration continue
 
-- **`.github/workflows/ci.yml`** — sur chaque push et chaque pull request vers
-  `main` ou `dev` : typage, tests, build. C'est le filet qui protège les règles
-  de mixage (voir `CLAUDE.md`).
+- **`.github/workflows/ci.yml`** — sur **chaque push, quelle que soit la
+  branche**, et sur chaque pull request vers `main` ou `dev` : typage, tests,
+  build. C'est le filet qui protège les règles de mixage (voir `CLAUDE.md`).
 - **`.github/workflows/deploy.yml`** — sur `main` uniquement : build puis
   publication sur Cloudflare Pages. Tant que les secrets `CLOUDFLARE_API_TOKEN`
   et `CLOUDFLARE_ACCOUNT_ID` ne sont pas renseignés dans les réglages GitHub du

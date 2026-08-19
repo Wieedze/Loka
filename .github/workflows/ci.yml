@@ -1,8 +1,10 @@
 name: CI
 
+# Toutes les branches : une liste de préfixes finit toujours par oublier celui
+# du jour, et une branche sans vérification ne sert à rien.
 on:
   push:
-    branches: [main, dev, 'feat/**', 'fix/**']
+    branches: ['**']
   pull_request:
     branches: [main, dev]
 

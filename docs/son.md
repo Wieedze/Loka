@@ -70,6 +70,7 @@ comportement et non du réglage artistique :
 |---|---|---|
 | `CUT_FADE_SEC` | 0.06 s | Coupe un message qu'on relance : assez court pour être perçu comme net, assez long pour ne pas claquer. |
 | `LOOP_POLL_MS` | 250 ms | Fréquence à laquelle on regarde s'il est temps d'enchaîner la boucle. |
+| `STOP_MARGIN_SEC` | 0,1 s | Délai entre la fin d'un fondu de sortie et l'arrêt réel de la piste, pour ne pas couper la dernière miette de son. |
 
 ## Les déclencheurs
 
@@ -77,12 +78,17 @@ comportement et non du réglage artistique :
 |---|---|---|---|
 | Spirale — Commencement | jingle d'accueil, plein niveau | le message précédent, s'il y en a un | `CUT_FADE_SEC` en sortie, `duckInSec` pour le fond |
 | Terre / Feu / Eau | ambiance du voyage, en fondu | l'ambiance en cours, en fondu | `crossfadeSec` des deux côtés |
+| … la même, à nouveau | rien : sans effet | rien | — |
 | Air — Lucidité | son de passage + ambiance Air | Terre-Feu-Eau, en fondu | `crossfadeSec` |
-| Lotus — Méditation | la voix, plein niveau | la voix précédente | `duckInSec` pour baisser le fond |
+| Lotus — Méditation | la voix, plein niveau | la voix précédente, en fondu | `duckInSec` pour le fond, `voiceFadeSec` pour la voix sortante |
 | fin de méditation | — | la voix | `duckOutSec` pour relever le fond |
 | Oreille — Mantra | le mantra, en fondu | le mantra précédent, en fondu | `crossfadeSec` |
 | Clé — La Porte | bruit de porte, puis Renouveau | l'ambiance du voyage, en fondu | `crossfadeSec` |
 | Lune — Clôture | message de clôture | — | `duckInSec` / `duckOutSec` |
+
+Relancer une ambiance déjà en cours est **sans effet** : Terre, Feu et Eau
+ouvrant la même bande-son, les toucher l'un après l'autre empilerait sinon des
+copies décalées de la même piste.
 
 Règle générale : **une ambiance ne démarre et ne s'arrête jamais autrement qu'en
 fondu ; une voix démarre net** (on ne fait pas apparaître une parole
