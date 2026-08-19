@@ -1,20 +1,45 @@
-# Questions ouvertes côté client
+# Questions ouvertes
 
-Envoyées à Oddwave Studio (Dorine & Morgane), sans réponse à ce jour.
-Chacune a une **décision provisoire** qui tient en attendant : c'est elle qu'il
-faudra revisiter, pas repartir de zéro.
+Ce qui attend une réponse, qui doit répondre, et ce qu'on a décidé **en
+attendant**. Toutes envoyées au client le 19/08/2026, sans réponse à ce jour.
 
-| # | Question | Décision provisoire |
-|---|---|---|
-| 1 | Le bouton étoile filante enchaîne-t-il l'ambiance de passage Lucidité *puis* l'Air en un seul appui ? | Le son de passage est joué **par-dessus** le fondu enchaîné, pas avant. |
-| 2 | Le message de clôture se lance-t-il seul après Renouveau, ou par un geste ? | Un **septième déclencheur** dédié, visible seulement quand la phase le permet (voir [ADR 0014](../02-decisions/0014-septieme-declencheur-cloture.md)). |
-| 3 | Comment présenter les dix méditations (titres, numéros, lien avec les cases) ? Les mantras sont-ils choisis ou enchaînés ? | Liste simple, titres du manifeste, choix libre. |
-| 4 | Peut-on lancer un mantra pendant une méditation ? | Autorisé, mais le mantra est ducké comme l'ambiance. Notre proposition reste **non**. |
-| 5 | Date limite de l'imprimeur ? | **Bloquant** pour figer l'URL du QR code. Aucune décision possible sans elle. |
-| 6 | Droits sur les musiques, les voix, et leur diffusion en ligne ? | À caler ensemble, y compris pour les extensions. |
+⚠️ = bloquant : conditionne un démarrage ou une échéance irréversible.
 
-## Une décision de plus, prise sans question
+## Côté client — Oddwave Studio (Dorine & Morgane)
 
-Terre, Feu et Eau ouvrent la **même** bande-son, et les toucher successivement
-est sans effet. Fidèle au son livré, mais potentiellement surprenant à l'usage :
-à confirmer si le client préfère un point unique pour Terre-Feu-Eau.
+| # | Question | Décidé en attendant | À revoir dans |
+|---|---|---|---|
+| **Q1** | Le bouton étoile filante enchaîne-t-il l'ambiance de passage Lucidité **puis** l'Air en un seul appui ? L'inventaire liste une ambiance Lucidité distincte, mais le bouton ne mentionne que l'Air. | Le son de passage joue **par-dessus** le fondu enchaîné vers l'Air, pas avant. | [ADR 0014](../02-decisions/0014-septieme-declencheur-cloture.md) |
+| **Q2** | Le message de clôture part-il seul après Renouveau, ou par un geste ? | Un **7e déclencheur** « Clôture », visible seulement quand la phase le permet — sinon la phase est inatteignable. | [ADR 0014](../02-decisions/0014-septieme-declencheur-cloture.md) |
+| **Q3** | Comment présenter les 10 méditations : titres, numéros, lien avec les cases du plateau ? Les mantras sont-ils choisis ou enchaînés ? | Liste simple depuis le manifeste, dans l'ordre du fichier. | [ADR 0010](../02-decisions/0010-manifeste-json.md) |
+| **Q4** | Peut-on lancer un mantra pendant une méditation ? *(notre proposition : non)* | Autorisé, mais le mantra est **ducké comme le reste du fond**. | [ADR 0007](../02-decisions/0007-deux-plans-de-mixage.md) |
+| **Q5** ⚠️ | Date limite de l'imprimeur ? | Rien à décider : c'est une date, pas un choix. Voir ci-dessous. | — |
+| **Q6** | Droits sur les musiques et les voix : la diffusion en ligne est-elle couverte par les contrats existants ? | Rien — question juridique, pas technique. | — |
+| **Q7** | Budget : le client demande une V1 « budget minimum ». | Devis à produire (dev + domaine/QR/hébergement + option maintenance). | [cadrage](01-cadrage-client.md) |
+
+## Q5 est le seul vrai point bloquant
+
+Tout le reste se rattrape après la sortie. **L'URL du QR code, non** : une fois
+la boîte imprimée, elle est définitive.
+
+La parade est indépendante de la réponse du client, et doit être prise **avant**
+toute impression : figer l'URL sur un domaine qu'on maîtrise, derrière une
+redirection intermédiaire — de sorte que l'hébergement puisse changer sans que
+le QR imprimé ne meure. Voir
+[ADR 0011](../02-decisions/0011-cloudflare-pages-et-r2.md).
+
+## Côté nous
+
+| Question | Position actuelle |
+|---|---|
+| App publique ou accès réservé ? | Public, sauf demande contraire du client. |
+| Statistiques d'usage anonymes ? | Proposé en option dans le devis, pas implémenté. |
+
+## Tenir cette liste
+
+- Une question qui reçoit une réponse **sort du tableau** : la réponse va dans
+  la [spec](02-spec-v1.md), avec sa date et sa source.
+- Une décision provisoire qui devient définitive fait l'objet d'un **nouvel
+  ADR** — on ne modifie pas l'ancien, on le remplace.
+- Une décision provisoire **contredite** par le client : nouvel ADR aussi, qui
+  dit ce qui a changé et pourquoi.
