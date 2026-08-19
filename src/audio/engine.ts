@@ -101,6 +101,9 @@ export class AudioEngine {
   playAmbiance(id: string): void {
     const { graph, manifest } = this.mustReady();
     const track = this.mustTrack(id);
+    // Terre, Feu and Eau all open the same soundtrack: touching them in turn
+    // must not stack offset copies of it over each other.
+    if (this.ambiance !== null && this.state.ambianceId === id) return;
     const fade = manifest.mix.crossfadeSec;
     if (this.ambiance) this.releaseAmbiance(this.ambiance, fade);
 

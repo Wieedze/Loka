@@ -217,6 +217,21 @@ describe('règle 4 — le passage Lucidité est un fondu enchaîné', () => {
     expect(engine.getState().ambianceId).toBe('air');
   });
 
+  it("ne réempile pas une ambiance déjà en cours", async () => {
+    engine.playAmbiance('tfe');
+    await flush();
+    const avant = env.context.gains.length;
+
+    // Terre, Feu et Eau ouvrent la même bande-son.
+    engine.playAmbiance('tfe');
+    engine.playAmbiance('tfe');
+    await flush();
+
+    expect(env.context.gains.length).toBe(avant);
+    expect(env.elements.filter((e) => e.src.includes('tfe.m4a'))).toHaveLength(1);
+    expect(engine.getState().ambianceId).toBe('tfe');
+  });
+
   it("la toute première ambiance entre aussi en fondu, jamais d'un coup", async () => {
     engine.playAmbiance('tfe');
     const tfe = env.lastGain();
@@ -274,6 +289,39 @@ describe('règle 5 — la Porte prend le relais', () => {
     await flush();
     expect(renouveau.gain.valueAtTime(t)).toBeCloseTo(0);
     expect(renouveau.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
+  });
+});
+
+describe('un fondu de sortie se termine par une coupure', () => {
+  it("coupe réellement la piste une fois le fondu terminé, pas seulement son volume", async () => {
+    vi.useFakeTimers();
+    engine.playAmbiance('tfe');
+    await flush();
+    const element = env.elementFor('tfe.m4a');
+    expect(element.playing).toBe(true);
+
+    engine.stopAmbiance();
+
+    // Pendant le fondu, la piste joue encore : la couper tout de suite
+    // produirait un blanc au lieu d'une sortie douce.
+    await vi.advanceTimersByTimeAsync(CROSSFADE * 1000 - 200);
+    expect(element.playing).toBe(true);
+
+    await vi.advanceTimersByTimeAsync(500);
+    expect(element.playing).toBe(false);
+  });
+
+  it("laisse le ducking remonter, lui, sans jamais couper la piste", async () => {
+    vi.useFakeTimers();
+    engine.playAmbiance('tfe');
+    await flush();
+    const element = env.elementFor('tfe.m4a');
+
+    engine.playVoice('med-01');
+    await vi.advanceTimersByTimeAsync((DUCK_IN + DUCK_OUT) * 1000 + 1000);
+
+    expect(element.playing).toBe(true);
+    expect(engine.getState().ambianceId).toBe('tfe');
   });
 });
 
