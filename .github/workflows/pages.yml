@@ -1,0 +1,57 @@
+name: Pages
+
+# Le site de documentation, publié depuis docs/ à chaque mise à jour de main.
+# Rien à voir avec l'application : elle part sur Cloudflare Pages (deploy.yml).
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Une publication à la fois, sans annuler celle qui est en cours.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Construire le site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Renseigne l'URL de base réelle du dépôt dans _config.yml : les liens
+      # restent justes même si le dépôt est renommé ou passe sur un domaine.
+      - name: Configurer Pages
+        uses: actions/configure-pages@v5
+        with:
+          static_site_generator: jekyll
+          generator_config_file: docs/_config.yml
+          # Active GitHub Pages au premier passage : pas de réglage manuel.
+          enablement: true
+
+      - name: Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./docs
+          destination: ./_site
+
+      - uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    name: Publier
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

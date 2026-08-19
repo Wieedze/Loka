@@ -12,7 +12,7 @@ se mettent à jour. Le *pourquoi* figé d'une décision est dans
 
 ## Voir aussi
 
-- [`../../tools/README.md`](../../tools/README.md) — mesurer un fondu pour de vrai.
+- [`tools/README.md`](https://github.com/Wieedze/Loka/blob/main/tools/README.md) — mesurer un fondu pour de vrai.
 - `src/audio/engine.test.ts` — les cinq règles de mixage, exécutables.
 
 ## Ajouter une entrée

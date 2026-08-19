@@ -35,6 +35,10 @@ git push origin main --tags
 - **`.github/workflows/ci.yml`** — sur **chaque push, quelle que soit la
   branche**, et sur chaque pull request vers `main` ou `dev` : typage, tests,
   build. C'est le filet qui protège les règles de mixage (voir `CLAUDE.md`).
+- **`.github/workflows/pages.yml`** — sur `main`, quand `docs/` bouge :
+  publication du site de documentation sur GitHub Pages
+  (<https://wieedze.github.io/Loka/>). Le workflow active Pages lui-même au
+  premier passage — rien à régler à la main.
 - **`.github/workflows/deploy.yml`** — sur `main` uniquement : build puis
   publication sur Cloudflare Pages. Tant que les secrets `CLOUDFLARE_API_TOKEN`
   et `CLOUDFLARE_ACCOUNT_ID` ne sont pas renseignés dans les réglages GitHub du

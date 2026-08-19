@@ -1,0 +1,213 @@
+/* Documentation La Loka — même palette que l'application (src/styles/tokens.css).
+   Sombre par défaut : c'est l'univers du jeu, et c'est reposant pour lire long. */
+
+:root {
+  --bg: #191412;
+  --bg-deep: #100c0b;
+  --surface: #241d19;
+  --surface-haut: #2e2620;
+  --texte: #ede4d8;
+  --sourdine: #9d8f81;
+  --accent: #d08b4c;
+  --accent-doux: rgb(208 139 76 / 16%);
+  --trait: rgb(237 228 216 / 12%);
+  --terre: #a8834f;
+  --feu: #c96a45;
+  --eau: #5b8ea3;
+  --air: #b3aec6;
+  --largeur-menu: 19rem;
+  --lecture: 46rem;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f0e7;
+    --bg-deep: #ece3d5;
+    --surface: #fffaf3;
+    --surface-haut: #f2e9dc;
+    --texte: #2b221c;
+    --sourdine: #6f6055;
+    --accent: #a1602a;
+    --accent-doux: rgb(161 96 42 / 12%);
+    --trait: rgb(43 34 28 / 14%);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--texte);
+  font: 16px/1.65 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+
+.saut {
+  position: absolute; left: -999px;
+  background: var(--accent); color: var(--bg-deep);
+  padding: .6rem 1rem; border-radius: 0 0 8px 0; z-index: 10;
+}
+.saut:focus { left: 0; top: 0; }
+
+/* ── En-tête ─────────────────────────────────────────────────────────── */
+
+.entete {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .7rem clamp(1rem, 4vw, 2.5rem);
+  background: rgb(16 12 11 / 82%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--trait);
+}
+@media (prefers-color-scheme: light) { .entete { background: rgb(246 240 231 / 85%); } }
+
+.marque { display: flex; align-items: center; gap: .7rem; color: var(--texte); text-decoration: none; }
+.marque .spirale { width: 30px; height: 30px; color: var(--accent); flex: none; }
+.marque span { display: flex; flex-direction: column; line-height: 1.15; }
+.marque b { font-size: 1.02rem; letter-spacing: .04em; }
+.marque i { font-style: normal; font-size: .78rem; color: var(--sourdine); letter-spacing: .1em; text-transform: uppercase; }
+
+.depot { font-size: .85rem; color: var(--sourdine); text-decoration: none; white-space: nowrap; }
+.depot:hover { color: var(--accent); }
+
+/* ── Grille ──────────────────────────────────────────────────────────── */
+
+.page {
+  display: grid;
+  grid-template-columns: var(--largeur-menu) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  max-width: 82rem; margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2.5rem) 4rem;
+}
+
+/* ── Menu ────────────────────────────────────────────────────────────── */
+
+.menu {
+  position: sticky; top: 3.6rem; align-self: start;
+  max-height: calc(100vh - 4.5rem); overflow-y: auto;
+  padding: 1.6rem 0 2rem;
+  font-size: .9rem;
+  scrollbar-width: thin;
+}
+
+.menu-accueil {
+  display: block; margin-bottom: 1.4rem; padding: .5rem .7rem;
+  border-radius: 8px; color: var(--texte); text-decoration: none; font-weight: 600;
+}
+.menu-accueil:hover, .menu-titre:hover { background: var(--surface); }
+
+.menu-section { margin-bottom: 1.15rem; }
+
+.menu-titre {
+  display: block; padding: .35rem .7rem; border-radius: 8px;
+  color: var(--texte); text-decoration: none; font-weight: 600; letter-spacing: .015em;
+}
+.menu-titre em {
+  display: block; font-style: normal; font-weight: 400;
+  font-size: .78rem; color: var(--sourdine); letter-spacing: .01em;
+}
+.menu-titre.courant, .menu-accueil.courant { background: var(--accent-doux); color: var(--accent); }
+.menu-titre.courant em { color: var(--accent); opacity: .75; }
+
+.menu ul { list-style: none; margin: .3rem 0 0; padding: 0 0 0 .7rem; border-left: 1px solid var(--trait); }
+.menu li a {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden;
+  padding: .28rem .55rem; border-radius: 6px;
+  color: var(--sourdine); text-decoration: none;
+  font-size: .845rem; line-height: 1.4;
+}
+.menu li a:hover { color: var(--texte); background: var(--surface); }
+.menu li a.courant { color: var(--accent); background: var(--accent-doux); font-weight: 600; }
+
+/* ── Contenu ─────────────────────────────────────────────────────────── */
+
+.contenu { max-width: var(--lecture); padding: 2.2rem 0 1rem; min-width: 0; }
+
+.contenu h1 {
+  margin: 0 0 1.4rem; font-size: clamp(1.65rem, 4vw, 2.15rem); line-height: 1.2;
+  letter-spacing: -.01em; font-weight: 650;
+}
+.contenu h2 {
+  margin: 2.6rem 0 .9rem; font-size: 1.28rem; line-height: 1.3; font-weight: 650;
+  padding-top: 1.4rem; border-top: 1px solid var(--trait);
+}
+.contenu h3 { margin: 1.9rem 0 .6rem; font-size: 1.05rem; font-weight: 650; }
+.contenu h1 + h2 { border-top: 0; padding-top: 0; margin-top: 1.6rem; }
+
+.contenu p, .contenu li { overflow-wrap: break-word; }
+.contenu ul, .contenu ol { padding-left: 1.3rem; }
+.contenu li { margin: .35rem 0; }
+.contenu li::marker { color: var(--sourdine); }
+
+.contenu blockquote {
+  margin: 1.5rem 0; padding: .9rem 1.2rem;
+  border-left: 3px solid var(--accent);
+  background: var(--surface); border-radius: 0 10px 10px 0;
+  color: var(--texte);
+}
+.contenu blockquote p { margin: .3rem 0; font-size: 1.02rem; }
+
+.contenu hr { margin: 2.6rem 0; border: 0; border-top: 1px solid var(--trait); }
+
+code {
+  font-family: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
+  font-size: .875em;
+  background: var(--surface-haut);
+  padding: .12em .38em; border-radius: 5px;
+}
+pre {
+  background: var(--bg-deep); border: 1px solid var(--trait);
+  padding: 1rem 1.1rem; border-radius: 10px; overflow-x: auto;
+  font-size: .84rem; line-height: 1.55;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+
+/* Dans un titre, un nom de code doit rester un titre : pas de pastille. */
+.contenu h1 code, .contenu h2 code, .contenu h3 code {
+  background: none; padding: 0; font-size: .92em; color: var(--accent);
+}
+
+/* Tableaux : enveloppés par le script du gabarit pour défiler seuls. */
+.tableau { overflow-x: auto; margin: 1.4rem 0; border-radius: 10px; border: 1px solid var(--trait); }
+.contenu table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+.contenu th, .contenu td { padding: .6rem .85rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--trait); }
+.contenu th { background: var(--surface); font-weight: 650; white-space: nowrap; }
+.contenu tr:last-child td { border-bottom: 0; }
+.contenu td code { white-space: nowrap; }
+
+.contenu img { max-width: 100%; height: auto; border-radius: 10px; }
+
+/* ── Pied ────────────────────────────────────────────────────────────── */
+
+.pied {
+  border-top: 1px solid var(--trait);
+  padding: 2rem clamp(1rem, 4vw, 2.5rem) 3rem;
+  color: var(--sourdine); font-size: .85rem;
+  background: var(--bg-deep);
+}
+.pied p { max-width: 82rem; margin: .3rem auto; }
+
+/* ── Téléphone ───────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .page { grid-template-columns: 1fr; gap: 0; }
+  .menu {
+    position: static; max-height: none; overflow: visible;
+    padding: 1.2rem 0 .6rem; margin-bottom: 1rem;
+    border-bottom: 1px solid var(--trait);
+  }
+  .menu-accueil { margin-bottom: .8rem; }
+  .menu-section { margin-bottom: .3rem; }
+  /* Sur petit écran on ne déroule que la section où l'on se trouve : le reste
+     resterait un mur de liens avant d'atteindre le texte. */
+  .menu-section ul { display: none; }
+  .menu-section.ouverte ul { display: block; }
+  .menu-titre em { display: none; }
+  .menu-section.ouverte .menu-titre em { display: block; }
+  .contenu { padding-top: 1rem; }
+}

@@ -1,7 +1,8 @@
 # La Loka
 
 Compagnon audio du jeu La Loka — web app mobile (React + Vite + Web Audio).
-Références : `docs/01-conception/01-architecture.md`, `docs/00-produit/02-spec-v1.md`.
+**Documentation** : <https://wieedze.github.io/Loka/> — ou [`docs/`](docs/) dans le dépôt.
+À lire avant de toucher au son : [`docs/04-lecons/`](docs/04-lecons/).
 
 ## Prérequis
 

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page.url != "/" %}{{ page.title | replace: "`", "" | escape }} · {% endif %}{{ site.title }}</title>
+<meta name="description" content="{{ page.description | default: site.description | strip_newlines | escape }}">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23191412'/><path d='M16 6a10 10 0 1 0 10 10 8 8 0 1 1-8 8 6 6 0 1 0 6-6' fill='none' stroke='%23d08b4c' stroke-width='2.4' stroke-linecap='round'/></svg>">
+<link rel="stylesheet" href="{{ '/assets/loka-docs.css' | relative_url }}">
+</head>
+<body>
+
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<header class="entete">
+  <a class="marque" href="{{ '/' | relative_url }}">
+    <svg class="spirale" viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 5a11 11 0 1 0 11 11 8.5 8.5 0 1 1-8.5 8.5 6 6 0 1 0 6-6"
+            fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+    <span><b>La Loka</b><i>documentation</i></span>
+  </a>
+  <a class="depot" href="https://github.com/{{ site.repository }}">Le dépôt&nbsp;↗</a>
+</header>
+
+<div class="page">
+
+  <nav class="menu" aria-label="Sommaire de la documentation">
+    <a class="menu-accueil{% if page.url == '/' %} courant{% endif %}" href="{{ '/' | relative_url }}">
+      La carte du dossier
+    </a>
+    {% for section in site.data.sections %}
+      {% assign ici = false %}
+      {% if page.dir == section.dir %}{% assign ici = true %}{% endif %}
+      <div class="menu-section{% if ici %} ouverte{% endif %}">
+        <a class="menu-titre{% if ici %} courant{% endif %}" href="{{ section.dir | relative_url }}">
+          {{ section.label }}
+          <em>{{ section.hint }}</em>
+        </a>
+        {% assign feuilles = site.pages | where: "dir", section.dir | sort: "name" %}
+        <ul>
+          {% for p in feuilles %}
+            {% assign racine = p.name | split: "." | first %}
+            {% unless racine == "README" or racine == "index" %}
+              <li>
+                <a href="{{ p.url | relative_url }}"{% if p.url == page.url %} class="courant" aria-current="page"{% endif %}>
+                  {{ p.title | default: p.name | replace: "`", "" | remove_first: "ADR " | remove_first: "Leçon " | remove_first: "Postmortem " | remove_first: "La Loka — " }}
+                </a>
+              </li>
+            {% endunless %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </nav>
+
+  <main id="contenu" class="contenu">
+    {{ content }}
+  </main>
+
+</div>
+
+<footer class="pied">
+  <p>Documentation du projet <b>La Loka</b> — compagnon sonore du jeu de plateau, pour Oddwave&nbsp;Studio.</p>
+  <p>Publiée automatiquement depuis <code>docs/</code> à chaque mise à jour de <code>main</code>.
+     <a href="https://github.com/{{ site.repository }}">Voir la source</a>.</p>
+</footer>
+
+<script>
+// Les tableaux sont larges et la doc se lit aussi sur téléphone : chacun défile
+// dans sa propre boîte, plutôt que de faire défiler la page entière.
+for (const table of document.querySelectorAll('.contenu table')) {
+  const boite = document.createElement('div');
+  boite.className = 'tableau';
+  table.parentNode.insertBefore(boite, table);
+  boite.appendChild(table);
+}
+</script>
+
+</body>
+</html>

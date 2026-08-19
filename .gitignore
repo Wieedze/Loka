@@ -4,3 +4,10 @@ dist/
 .env.local
 public/audio/
 audio-src/
+
+# site de documentation (construit par GitHub Pages)
+_site/
+docs/_site/
+.jekyll-cache/
+docs/.jekyll-cache/
+.jekyll-metadata
