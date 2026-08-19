@@ -1,0 +1,25 @@
+/* Palette provisoire — sera remplacée par la charte Claude Design. */
+:root {
+  --color-bg: #191412;
+  --color-bg-deep: #100c0b;
+  --color-surface: #241d19;
+  --color-surface-raised: #2e2620;
+  --color-text: #ede4d8;
+  --color-muted: #9d8f81;
+  --color-accent: #d08b4c;
+  --color-accent-dim: rgb(208 139 76 / 18%);
+
+  --color-terre: #a8834f;
+  --color-feu: #c96a45;
+  --color-eau: #5b8ea3;
+  --color-air: #b3aec6;
+
+  --radius-button: 20px;
+  --tap-min: 64px;
+  --font-body: system-ui, sans-serif;
+
+  /* Le calme : tout se fond, rien ne claque. */
+  --fondu: 900ms;
+  --fondu-court: 420ms;
+  --courbe: cubic-bezier(0.33, 0, 0.2, 1);
+}
