@@ -1,8 +1,18 @@
 # La Loka — notes pour Claude Code
 
 Application web compagnon sonore du jeu de plateau La Loka (client : Oddwave Studio).
-Accès par QR code sur la boîte du jeu. Spec fonctionnelle : `docs/spec-v1.md`. Stack et
-décisions techniques : `docs/architecture.md`.
+Accès par QR code sur la boîte du jeu.
+
+**À lire avant de toucher au son : `docs/journal/erreurs.md`** — les pièges déjà
+rencontrés, avec leur cause racine. Plusieurs ont survécu à une suite de tests verte.
+
+| Sujet | Document |
+|---|---|
+| Ce que l'app doit faire | `docs/spec-v1.md` |
+| Enchaînements sonores, variables temporelles, déclencheurs | `docs/son.md` |
+| Stack et décisions techniques | `docs/architecture.md` |
+| Contexte, décisions, questions en attente | `docs/journal/` |
+| Vérifier un fondu pour de vrai | `tools/README.md` |
 
 ## Règle d'environnement — droits des fichiers
 
@@ -42,8 +52,14 @@ bunx vitest run
   premier — c'est ce qui avait silencieusement désactivé tous les fondus de l'app.
 - Le moteur (`src/audio/`) et la machine d'état (`src/journey/`) sont du TypeScript pur, sans
   React ni DOM (hors `<audio>`) : c'est ce qui les rend testables.
-- **Les 5 règles de mixage de `docs/spec-v1.md` sont couvertes une par une par
-  `src/audio/engine.test.ts`**, qui rejoue les automations de gain sur un faux AudioContext et
-  vérifie ce qui est réellement audible à un instant donné. Toute modification du mixage doit
-  garder ces tests verts — ils sont la spec exécutable.
+- **Les règles de mixage de `docs/spec-v1.md` sont couvertes une par une par
+  `src/audio/engine.test.ts`**, qui rejoue les automations de gain sur un faux AudioContext.
+  Toute modification du mixage doit garder ces tests verts — ils sont la spec exécutable.
+  **Mais ils ne prouvent pas que le son est bon** : ils vérifient ce qui est *planifié*, pas ce
+  qui sort du haut-parleur. Pour ça, `tools/mesure-enveloppe.ts` ou la page `/diagnostic`.
+- **Un fondu de sortie se termine toujours par une coupure réelle** (`fadeOutAndStop`), un
+  ducking jamais (`updateDuck`). Ne pas confondre les deux : une piste laissée à gain zéro
+  continue de tourner.
+- **Les placeholders audio doivent être des tons tenus à volume constant.** Un placeholder qui
+  pulse masque les fondus et rend toute écoute — et toute mesure — ininterprétable.
 - Aucun secret dans ce projet (pas de backend). `.env.example` ne porte que `VITE_AUDIO_BASE`.
