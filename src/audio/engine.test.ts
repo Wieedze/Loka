@@ -13,20 +13,16 @@ const CUT_FADE = 0.06;
 
 let env: FakeAudioEnvironment;
 let engine: AudioEngine;
-// init() creates the three buses in this order.
-let ambianceBus: FakeGainNode;
-let mantraBus: FakeGainNode;
-let voiceBus: FakeGainNode;
+// init() creates exactly one bus: le fond, qui porte ambiances et mantras.
+let fond: FakeGainNode;
 
 async function start(): Promise<void> {
   env = installFakeAudio();
   engine = new AudioEngine();
   await engine.init();
-  const [ambiance, mantra, voice] = env.context.gains;
-  if (!ambiance || !mantra || !voice) throw new Error('buses not created');
-  ambianceBus = ambiance;
-  mantraBus = mantra;
-  voiceBus = voice;
+  const [premier] = env.context.gains;
+  if (!premier) throw new Error('bus du fond non créé');
+  fond = premier;
 }
 
 beforeEach(start);
@@ -45,19 +41,27 @@ describe("règle 1 — l'ambiance ne s'arrête pas pendant une méditation", () 
     engine.playVoice('med-01');
     const t = env.context.currentTime;
 
-    expect(ambianceBus.gain.valueAtTime(t)).toBeCloseTo(1);
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_IN / 2)).toBeCloseTo((1 + DUCK_LEVEL) / 2);
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(DUCK_LEVEL);
+    expect(fond.gain.valueAtTime(t)).toBeCloseTo(1);
+    expect(fond.gain.valueAtTime(t + DUCK_IN / 2)).toBeCloseTo((1 + DUCK_LEVEL) / 2);
+    expect(fond.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(DUCK_LEVEL);
     // The track itself keeps playing at full level: only the bus dips.
     expect(tfe.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(1);
     expect(env.elementFor('tfe.m4a').playing).toBe(true);
   });
 
-  it('baisse aussi les mantras, mais pas la voix', () => {
+  it('baisse le fond — ambiances et mantras ensemble — mais jamais la voix', async () => {
+    engine.playAmbiance('tfe');
+    engine.playMantra('mantra-01');
+    await flush();
+
     engine.playVoice('med-01');
+    const voix = env.lastGain();
     const t = env.context.currentTime + DUCK_IN;
-    expect(mantraBus.gain.valueAtTime(t)).toBeCloseTo(DUCK_LEVEL);
-    expect(voiceBus.gain.valueAtTime(t)).toBeCloseTo(1);
+
+    // Ambiance et mantra passent par le même bus : un seul gain à baisser.
+    expect(fond.gain.valueAtTime(t)).toBeCloseTo(DUCK_LEVEL);
+    // La voix va droit à la sortie : rien ne la touche.
+    expect(voix.gain.valueAtTime(t)).toBeCloseTo(1);
   });
 
   it("remonte progressivement à la fin de la méditation", () => {
@@ -68,9 +72,9 @@ describe("règle 1 — l'ambiance ne s'arrête pas pendant une méditation", () 
     env.elementFor('meditations/01').emit('ended');
     const t = env.context.currentTime;
 
-    expect(ambianceBus.gain.valueAtTime(t)).toBeCloseTo(DUCK_LEVEL);
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_OUT / 2)).toBeCloseTo((DUCK_LEVEL + 1) / 2);
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_OUT)).toBeCloseTo(1);
+    expect(fond.gain.valueAtTime(t)).toBeCloseTo(DUCK_LEVEL);
+    expect(fond.gain.valueAtTime(t + DUCK_OUT / 2)).toBeCloseTo((DUCK_LEVEL + 1) / 2);
+    expect(fond.gain.valueAtTime(t + DUCK_OUT)).toBeCloseTo(1);
     expect(engine.getState().voiceId).toBeNull();
   });
 
@@ -82,7 +86,7 @@ describe("règle 1 — l'ambiance ne s'arrête pas pendant une méditation", () 
 
     const t = env.context.currentTime;
     expect(engine.getState().voiceId).toBeNull();
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_OUT)).toBeCloseTo(1);
+    expect(fond.gain.valueAtTime(t + DUCK_OUT)).toBeCloseTo(1);
   });
 
   it("l'arrêt manuel fond la voix au lieu de la couper net", () => {
@@ -96,7 +100,7 @@ describe("règle 1 — l'ambiance ne s'arrête pas pendant une méditation", () 
     expect(voice.gain.valueAtTime(t)).toBeCloseTo(1);
     expect(voice.gain.valueAtTime(t + VOICE_FADE / 2)).toBeCloseTo(0.5);
     expect(voice.gain.valueAtTime(t + VOICE_FADE)).toBeCloseTo(0);
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_OUT)).toBeCloseTo(1);
+    expect(fond.gain.valueAtTime(t + DUCK_OUT)).toBeCloseTo(1);
   });
 });
 
@@ -116,7 +120,7 @@ describe('règle 2 — les mantras se superposent, un seul à la fois', () => {
     expect(mantra.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
     // The ambiance is untouched: superposition, not replacement.
     expect(tfe.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
-    expect(ambianceBus.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
+    expect(fond.gain.valueAtTime(t + CROSSFADE)).toBeCloseTo(1);
   });
 
   it('remplace un mantra par un fondu croisé', async () => {
@@ -253,7 +257,7 @@ describe('règle 4 — le passage Lucidité est un fondu enchaîné', () => {
     await flush();
 
     // 'transition' is sound design, not speech: nothing gets ducked.
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(1);
+    expect(fond.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(1);
   });
 });
 
@@ -333,7 +337,7 @@ describe('messages parlés', () => {
 
     void engine.playOneShot('accueil');
 
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(DUCK_LEVEL);
+    expect(fond.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(DUCK_LEVEL);
   });
 
   it('le message de clôture baisse aussi le renouveau', () => {
@@ -343,7 +347,7 @@ describe('messages parlés', () => {
 
     void engine.playOneShot('cloture');
 
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(DUCK_LEVEL);
+    expect(fond.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(DUCK_LEVEL);
   });
 
   it("le bruit de Porte, lui, ne baisse rien", () => {
@@ -353,7 +357,7 @@ describe('messages parlés', () => {
 
     void engine.playOneShot('porte');
 
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(1);
+    expect(fond.gain.valueAtTime(t + DUCK_IN)).toBeCloseTo(1);
   });
 
   it("ne remonte l'ambiance qu'une fois la dernière voix terminée", async () => {
@@ -366,11 +370,11 @@ describe('messages parlés', () => {
     const source = env.context.sources[env.context.sources.length - 1];
     source?.onended?.();
     const t = env.context.currentTime;
-    expect(ambianceBus.gain.valueAtTime(t + DUCK_OUT)).toBeCloseTo(DUCK_LEVEL);
+    expect(fond.gain.valueAtTime(t + DUCK_OUT)).toBeCloseTo(DUCK_LEVEL);
 
     env.elementFor('meditations/01').emit('ended');
     const t2 = env.context.currentTime;
-    expect(ambianceBus.gain.valueAtTime(t2 + DUCK_OUT)).toBeCloseTo(1);
+    expect(fond.gain.valueAtTime(t2 + DUCK_OUT)).toBeCloseTo(1);
   });
 
   it('un double appui espacé fait taire le premier message aussitôt', async () => {

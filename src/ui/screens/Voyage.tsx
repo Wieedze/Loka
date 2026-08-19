@@ -30,56 +30,49 @@ export function Voyage({ phase, dispatch }: VoyageProps) {
   const [panneau, setPanneau] = useState<Panneau>(null);
   const attendu = nextEvent(phase);
 
-  const press = (event: JourneyEvent, action: () => void): void => {
-    if (!isEventAllowed(phase, event)) return;
-    setPanneau(null);
-    action();
-    dispatch(event);
-  };
+  // A step of the journey: ignored when it makes no sense yet, and it always
+  // closes whatever panel was open.
+  const geste =
+    (event: JourneyEvent, jouer: () => void) =>
+    (): void => {
+      if (!isEventAllowed(phase, event)) return;
+      setPanneau(null);
+      jouer();
+      dispatch(event);
+    };
 
-  const voyageEnCours = state.ambianceId === 'tfe';
-  const porteOuverte = isEventAllowed(phase, 'DERNIERE_CASE');
-  const clotureOuverte = isEventAllowed(phase, 'CLOTURE');
+  const commencer = geste('COMMENCEMENT', () => void engine.playOneShot('accueil'));
+  const ouvrirVoyage = geste('TERRE_FEU_EAU', () => engine.playAmbiance('tfe'));
+  const passerParAir = geste('LUCIDITE', () => {
+    void engine.playOneShot('lucidite');
+    engine.playAmbiance('air');
+  });
+  const franchirLaPorte = geste('DERNIERE_CASE', () => {
+    engine.stopAmbiance();
+    void engine
+      .playOneShot('porte')
+      .then(() => engine.playAmbiance('renouveau'))
+      .catch(() => undefined);
+  });
+  const clore = geste('CLOTURE', () => void engine.playOneShot('cloture'));
 
-  const enTrainDeJouer: string[] = [];
-  if (state.ambianceId) enTrainDeJouer.push(engine.title(state.ambianceId));
-  if (state.voiceId) enTrainDeJouer.push(engine.title(state.voiceId) + (state.voicePaused ? ' — en pause' : ''));
-  if (state.mantraId) enTrainDeJouer.push(engine.title(state.mantraId));
+  // Momentary gestures: they overlay the journey instead of advancing it.
+  const gestes = [
+    { cle: 'meditations', label: 'Méditation', glyphe: 'lotus', angle: 225, joue: state.voiceId !== null },
+    { cle: 'mantras', label: 'Mantra', glyphe: 'oreille', angle: 135, joue: state.mantraId !== null },
+  ] as const;
 
-  const commencer = (): void => {
-    press('COMMENCEMENT', () => {
-      void engine.playOneShot('accueil');
-    });
-  };
+  // The threshold appears once the journey has come far enough.
+  const seuil = [
+    { label: 'La Porte', glyphe: 'cle', attendu: attendu === 'DERNIERE_CASE', onPress: franchirLaPorte, visible: true },
+    { label: 'Clôture', glyphe: 'lune', attendu: attendu === 'CLOTURE', onPress: clore, visible: isEventAllowed(phase, 'CLOTURE') },
+  ] as const;
 
-  const ouvrirVoyage = (): void => {
-    press('TERRE_FEU_EAU', () => engine.playAmbiance('tfe'));
-  };
-
-  const passerParAir = (): void => {
-    press('LUCIDITE', () => {
-      void engine.playOneShot('lucidite');
-      engine.playAmbiance('air');
-    });
-  };
-
-  const franchirLaPorte = (): void => {
-    press('DERNIERE_CASE', () => {
-      engine.stopAmbiance();
-      engine
-        .playOneShot('porte')
-        .then(() => {
-          engine.playAmbiance('renouveau');
-        })
-        .catch(() => undefined);
-    });
-  };
-
-  const clore = (): void => {
-    press('CLOTURE', () => {
-      void engine.playOneShot('cloture');
-    });
-  };
+  const enTrainDeJouer = [
+    state.ambianceId && engine.title(state.ambianceId),
+    state.voiceId && engine.title(state.voiceId) + (state.voicePaused ? ' — en pause' : ''),
+    state.mantraId && engine.title(state.mantraId),
+  ].filter(Boolean);
 
   return (
     <main className="voyage">
@@ -99,44 +92,41 @@ export function Voyage({ phase, dispatch }: VoyageProps) {
             element={element.id}
             angle={element.angle}
             aide={element.passage ? 'passage de Lucidité' : 'bande-son du voyage'}
-            actif={element.passage ? state.ambianceId === 'air' : voyageEnCours}
+            actif={element.passage ? state.ambianceId === 'air' : state.ambianceId === 'tfe'}
             attendu={attendu === (element.passage ? 'LUCIDITE' : 'TERRE_FEU_EAU')}
             onPress={element.passage ? passerParAir : ouvrirVoyage}
           />
         ))}
 
-        <Noeud
-          label="Méditation"
-          glyphe="lotus"
-          angle={225}
-          orbite={0.54}
-          petit
-          actif={state.voiceId !== null || panneau === 'meditations'}
-          onPress={() => setPanneau(panneau === 'meditations' ? null : 'meditations')}
-        />
-
-        <Noeud
-          label="Mantra"
-          glyphe="oreille"
-          angle={135}
-          orbite={0.54}
-          petit
-          actif={state.mantraId !== null || panneau === 'mantras'}
-          onPress={() => setPanneau(panneau === 'mantras' ? null : 'mantras')}
-        />
+        {gestes.map((geste) => (
+          <Noeud
+            key={geste.cle}
+            label={geste.label}
+            glyphe={geste.glyphe}
+            angle={geste.angle}
+            orbite={0.54}
+            petit
+            actif={geste.joue || panneau === geste.cle}
+            onPress={() => setPanneau(panneau === geste.cle ? null : geste.cle)}
+          />
+        ))}
       </div>
 
-      <div className="seuil" data-visible={porteOuverte}>
-        <button type="button" className="seuil-bouton" data-attendu={attendu === 'DERNIERE_CASE'} onClick={franchirLaPorte}>
-          <Glyphe name="cle" />
-          <span>La Porte</span>
-        </button>
-        {clotureOuverte && (
-          <button type="button" className="seuil-bouton" data-attendu={attendu === 'CLOTURE'} onClick={clore}>
-            <Glyphe name="lune" />
-            <span>Clôture</span>
-          </button>
-        )}
+      <div className="seuil" data-visible={isEventAllowed(phase, 'DERNIERE_CASE')}>
+        {seuil
+          .filter((etape) => etape.visible)
+          .map((etape) => (
+            <button
+              key={etape.label}
+              type="button"
+              className="seuil-bouton"
+              data-attendu={etape.attendu}
+              onClick={etape.onPress}
+            >
+              <Glyphe name={etape.glyphe} />
+              <span>{etape.label}</span>
+            </button>
+          ))}
       </div>
 
       <p className="ce-qui-joue" aria-live="polite">
@@ -164,10 +154,7 @@ export function Voyage({ phase, dispatch }: VoyageProps) {
           </ul>
           {panneau === 'meditations' && state.voiceId !== null && (
             <div className="panneau-controles">
-              <button
-                type="button"
-                onClick={() => (state.voicePaused ? engine.resumeVoice() : engine.pauseVoice())}
-              >
+              <button type="button" onClick={() => (state.voicePaused ? engine.resumeVoice() : engine.pauseVoice())}>
                 {state.voicePaused ? 'Reprendre' : 'Pause'}
               </button>
               <button type="button" onClick={() => engine.stopVoice()}>

@@ -11,13 +11,13 @@ export interface EngineState {
   readonly mantraId: string | null;
 }
 
+// Deux plans, et un seul se baisse : le fond (ambiances et mantras) s'efface
+// quand une voix parle. La voix, elle, va droit à la sortie — c'est ce pour
+// quoi le reste s'efface.
 interface Graph {
   ctx: AudioContext;
-  ambianceBus: GainNode;
-  voiceBus: GainNode;
-  mantraBus: GainNode;
-  ambianceRamp: GainRamp;
-  mantraRamp: GainRamp;
+  fond: GainNode;
+  fondRamp: GainRamp;
 }
 
 interface AmbianceChannel {
@@ -60,21 +60,9 @@ export class AudioEngine {
   async init(): Promise<void> {
     if (!this.graph) {
       const ctx = new AudioContext();
-      const bus = (): GainNode => {
-        const node = ctx.createGain();
-        node.connect(ctx.destination);
-        return node;
-      };
-      const ambianceBus = bus();
-      const mantraBus = bus();
-      this.graph = {
-        ctx,
-        ambianceBus,
-        mantraBus,
-        voiceBus: bus(),
-        ambianceRamp: new GainRamp(ambianceBus.gain, 1),
-        mantraRamp: new GainRamp(mantraBus.gain, 1),
-      };
+      const fond = ctx.createGain();
+      fond.connect(ctx.destination);
+      this.graph = { ctx, fond, fondRamp: new GainRamp(fond.gain, 1) };
     }
     if (!this.manifest) {
       this.manifest = await loadManifest();
@@ -103,16 +91,16 @@ export class AudioEngine {
     const track = this.mustTrack(id);
     // Terre, Feu and Eau all open the same soundtrack: touching them in turn
     // must not stack offset copies of it over each other.
-    if (this.ambiance !== null && this.state.ambianceId === id) return;
+    if (this.state.ambianceId === id) return;
     const fade = manifest.mix.crossfadeSec;
     if (this.ambiance) this.releaseAmbiance(this.ambiance, fade);
 
     // Always starts silent: an ambiance never bursts in at full level. The
     // fade is applied by play(), once the file is really sounding.
-    const player = new StreamPlayer(graph.ctx, trackUrl(track), graph.ambianceBus, 0);
+    const player = new StreamPlayer(graph.ctx, trackUrl(track), graph.fond, 0);
 
     const channel: AmbianceChannel = { track, player, loopTimer: null, rotating: false };
-    this.attachAmbianceEnd(channel, player);
+    this.attachAmbianceEnd(channel);
     if (track.loop === true) {
       channel.loopTimer = window.setInterval(() => void this.rotateLoopIfNeeded(channel), LOOP_POLL_MS);
     }
@@ -135,7 +123,7 @@ export class AudioEngine {
     const track = this.mustTrack(id);
     if (this.voice) this.fadeOutAndStop(this.voice, manifest.mix.voiceFadeSec);
 
-    const player = new StreamPlayer(graph.ctx, trackUrl(track), graph.voiceBus);
+    const player = new StreamPlayer(graph.ctx, trackUrl(track), graph.ctx.destination);
     player.onEnded = () => {
       if (this.voice !== player) return;
       this.voice = null;
@@ -176,7 +164,7 @@ export class AudioEngine {
     const fade = manifest.mix.crossfadeSec;
     if (this.mantra) this.fadeOutAndStop(this.mantra, fade);
 
-    const player = new BufferPlayer(graph.ctx, trackUrl(track), graph.mantraBus, 0);
+    const player = new BufferPlayer(graph.ctx, trackUrl(track), graph.fond, 0);
     player.onEnded = () => {
       if (this.mantra !== player) return;
       this.mantra = null;
@@ -196,7 +184,7 @@ export class AudioEngine {
     if (this.oneShot) this.fadeOutAndStop(this.oneShot.player, CUT_FADE_SEC);
 
     const ducks = SPOKEN_ROLES.includes(track.role);
-    const player = new BufferPlayer(graph.ctx, trackUrl(track), graph.voiceBus);
+    const player = new BufferPlayer(graph.ctx, trackUrl(track), graph.ctx.destination);
     const entry = { player, ducks };
     this.oneShot = entry;
     if (ducks) this.updateDuck(manifest.mix.duckInSec);
@@ -218,7 +206,10 @@ export class AudioEngine {
     });
   }
 
-  private attachAmbianceEnd(channel: AmbianceChannel, player: StreamPlayer): void {
+  // Attaches to whichever player the channel currently holds, so a rotation
+  // cannot leave the end handler pointing at the retired one.
+  private attachAmbianceEnd(channel: AmbianceChannel): void {
+    const player = channel.player;
     player.onEnded = () => {
       if (this.ambiance !== channel || channel.player !== player) return;
       this.stopLoopTimer(channel);
@@ -235,7 +226,7 @@ export class AudioEngine {
     if (old.currentTime < loopCrossfadeStart(old.duration, fade)) return;
 
     channel.rotating = true;
-    const next = new StreamPlayer(graph.ctx, trackUrl(channel.track), graph.ambianceBus, 0);
+    const next = new StreamPlayer(graph.ctx, trackUrl(channel.track), graph.fond, 0);
     try {
       await next.play(fade);
     } catch {
@@ -250,9 +241,9 @@ export class AudioEngine {
       channel.rotating = false;
       return;
     }
-    this.attachAmbianceEnd(channel, next);
-    this.fadeOutAndStop(old, fade);
     channel.player = next;
+    this.attachAmbianceEnd(channel);
+    this.fadeOutAndStop(old, fade);
     channel.rotating = false;
   }
 
@@ -282,10 +273,7 @@ export class AudioEngine {
   private updateDuck(seconds: number): void {
     const { graph, manifest } = this.mustReady();
     const ducked = this.voice !== null || this.oneShot?.ducks === true;
-    const target = ducked ? manifest.mix.duckLevel : 1;
-    const now = graph.ctx.currentTime;
-    graph.ambianceRamp.to(target, now, seconds);
-    graph.mantraRamp.to(target, now, seconds);
+    graph.fondRamp.to(ducked ? manifest.mix.duckLevel : 1, graph.ctx.currentTime, seconds);
   }
 
   private mustReady(): { graph: Graph; manifest: Manifest } {
