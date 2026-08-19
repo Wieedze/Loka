@@ -8,6 +8,18 @@ correctement.
 |---|---|
 | [19 août 2026](2026-08-19.md) | cadrage client, moteur audio, mandala, CI/CD, et la longue traque des fondus |
 
+## Le carnet de dette
+
+Une exception à la règle des entrées datées : [`01-reste-a-faire.md`](01-reste-a-faire.md)
+est un **document vivant**, issu de la relecture du 19 août. Il liste les défauts
+connus et non corrigés, **classés par ce que ça coûte si on les oublie** — d'une
+ambiance qui meurt définitivement en cours de partie à une piste manquante qui
+finit la partie en silence.
+
+À ouvrir avant de choisir sur quoi travailler. Une ligne qui est corrigée en
+sort ; si elle a coûté du temps, elle devient un
+[postmortem](../03-postmortems/).
+
 ## Ce qu'on y met — et ce qu'on n'y met pas
 
 Le journal porte ce que le code et l'historique git ne diront jamais :

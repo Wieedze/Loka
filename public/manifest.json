@@ -1,5 +1,5 @@
 {
-  "_note": "Manifeste de développement : 3 méditations et 3 mantras en placeholders, là où la version livrée en comptera 10 de chaque (voir docs/spec-v1.md). Ajouter une piste = ajouter une entrée ici et le fichier correspondant, sans toucher au code.",
+  "_note": "Manifeste de développement : 3 méditations et 3 mantras en placeholders, là où la version livrée en comptera 10 de chaque (voir docs/00-produit/02-spec-v1.md). Ajouter une piste = ajouter une entrée ici et le fichier correspondant, sans toucher au code.",
   "version": 1,
   "mix": {
     "duckLevel": 0.25,

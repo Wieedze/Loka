@@ -3,8 +3,9 @@
 Application web compagnon sonore du jeu de plateau La Loka (client : Oddwave Studio).
 Accès par QR code sur la boîte du jeu.
 
-**À lire avant de toucher au son : `docs/03-postmortems/`** — les pièges déjà
-rencontrés, avec leur cause racine. Plusieurs ont survécu à une suite de tests verte.
+**À lire avant de toucher au son : `docs/04-lecons/`** — les règles tirées des
+pièges déjà rencontrés ; le récit détaillé est dans `docs/03-postmortems/`.
+Plusieurs de ces bugs ont survécu à une suite de tests verte.
 
 | Sujet | Document |
 |---|---|
@@ -13,7 +14,8 @@ rencontrés, avec leur cause racine. Plusieurs ont survécu à une suite de test
 | Stack et décisions techniques | `docs/01-conception/01-architecture.md` |
 | Pourquoi tel choix technique | `docs/02-decisions/` |
 | Ce qui a mal tourné, et la leçon | `docs/03-postmortems/`, `docs/04-lecons/` |
-| Contexte, reste à faire | `docs/05-journal/` |
+| Contexte daté et reste à faire | `docs/05-journal/` |
+| La carte complète de la documentation | `docs/README.md` |
 | Questions en attente côté client | `docs/00-produit/03-questions-ouvertes.md` |
 | Vérifier un fondu pour de vrai | `tools/README.md` |
 

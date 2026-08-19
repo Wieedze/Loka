@@ -13,6 +13,7 @@ Studio), accessible par QR code sur la boîte du jeu.
 | Comment le projet est construit | [`01-conception/01-architecture.md`](01-conception/01-architecture.md) |
 | **Pourquoi** telle chose est faite ainsi | [`02-decisions/`](02-decisions/) |
 | Ce qui a été perdu comme temps, et sur quoi | [`03-postmortems/`](03-postmortems/) |
+| **Ce qui reste à corriger**, par ordre de dégât | [`05-journal/01-reste-a-faire.md`](05-journal/01-reste-a-faire.md) |
 | Ce qui reste en attente du client | [`00-produit/03-questions-ouvertes.md`](00-produit/03-questions-ouvertes.md) |
 | Ce qui s'est passé un jour donné | [`05-journal/`](05-journal/) |
 | Les règles de travail sur ce dépôt | [`../CLAUDE.md`](../CLAUDE.md), [`../CONTRIBUTING.md`](../CONTRIBUTING.md) |
@@ -26,7 +27,7 @@ Studio), accessible par QR code sur la boîte du jeu.
 | [`02-decisions/`](02-decisions/) | les ADR — une décision structurante par fichier, avec son pourquoi | quand on est tenté de faire autrement |
 | [`03-postmortems/`](03-postmortems/) | les incidents réels : impact, cause racine, correction | quand un symptôme ressemble à du déjà-vu |
 | [`04-lecons/`](04-lecons/) | ce qu'on en a tiré, sous forme de règles réutilisables | **avant de toucher au son** |
-| [`05-journal/`](05-journal/) | le contexte daté, les décisions prises faute de réponse | en reprenant après une pause |
+| [`05-journal/`](05-journal/) | le contexte daté, les décisions prises faute de réponse, et le carnet de dette | en reprenant après une pause |
 | [`06-sources/`](06-sources/) | les documents du client, non modifiables | pour vérifier une affirmation à la source |
 
 ## Conventions

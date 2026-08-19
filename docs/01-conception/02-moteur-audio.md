@@ -1,7 +1,9 @@
 # Le son : variables temporelles et déclencheurs
 
 Référence de travail pour les enchaînements de pistes. Le comportement attendu
-vient de `spec-v1.md` ; ce document dit **comment** on l'obtient.
+vient de [`../00-produit/02-spec-v1.md`](../00-produit/02-spec-v1.md) ; ce document dit
+**comment** on l'obtient. Le *pourquoi* de chaque mécanisme est dans les
+[ADR](../02-decisions/).
 
 ## Le principe, en une phrase
 

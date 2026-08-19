@@ -1,6 +1,9 @@
 # La Loka — Stack & Architecture
 
-Référence technique du projet. Périmètre fonctionnel : voir `spec-v1.md`.
+Référence technique du projet. Périmètre fonctionnel : voir
+[`../00-produit/02-spec-v1.md`](../00-produit/02-spec-v1.md). Le *pourquoi* figé de
+chaque choix est dans les [ADR](../02-decisions/) ; ce document décrit l'état
+d'aujourd'hui.
 
 ## Révision — périmètre du scaffold initial (19/08/2026)
 
