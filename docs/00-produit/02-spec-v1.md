@@ -1,7 +1,8 @@
 # La Loka — Spec V1 (d'après la réponse client du 19/08/2026)
 
-Source : `docs/Reponse_Oddwave_La_Loka_avec_fonctionnement_boutons.pdf` (Dorine & Morgane).
-Cadrage initial : `docs/00-produit/01-cadrage-client.md`.
+Source : [`../06-sources/02-reponse-oddwave-boutons.pdf`](../06-sources/02-reponse-oddwave-boutons.pdf) (Dorine & Morgane).
+Cadrage initial : [`01-cadrage-client.md`](01-cadrage-client.md).
+Ce qui reste en suspens : [`03-questions-ouvertes.md`](03-questions-ouvertes.md).
 
 ## Inventaire audio (fourni par Oddwave, masters WAV)
 
@@ -57,7 +58,7 @@ Interface minimaliste, discrète, univers graphique La Loka, différenciation vi
 4. **Mantra pendant une méditation** : autorisé ? (proposition : non, pour garder la voix seule au premier plan)
 5. **Dates** : impression/sortie en cours de définition avec la maison d'édition → l'URL/QR reste à figer avant toute impression (notre point bloquant E1 tient toujours).
 6. **Droits** : à vérifier ensemble (musiques, voix, diffusion en ligne, extensions).
-7. **Budget** : « budget minimum » pour une V1 fonctionnelle et qualitative → à chiffrer dans notre devis (inclut domaine, QR, hébergement — cf. cadrage-client.md).
+7. **Budget** : « budget minimum » pour une V1 fonctionnelle et qualitative → à chiffrer dans notre devis (inclut domaine, QR, hébergement — cf. [`01-cadrage-client.md`](01-cadrage-client.md)).
 
 ## Prochaines étapes
 
