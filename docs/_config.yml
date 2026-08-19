@@ -1,0 +1,45 @@
+# Site de documentation publié sur GitHub Pages depuis ce dossier.
+# La source reste le Markdown : ces fichiers ne servent qu'à l'habillage.
+
+title: La Loka — documentation
+description: >-
+  Application web compagnon sonore du jeu de plateau La Loka.
+  Spec, conception, décisions, postmortems et leçons.
+url: https://wieedze.github.io
+baseurl: /Loka
+repository: Wieedze/Loka
+
+# Les fichiers du dossier n'ont pas d'en-tête YAML : ils doivent rester
+# lisibles tels quels dans l'éditeur et sur GitHub. Ces greffons s'en chargent.
+plugins:
+  - jekyll-optional-front-matter   # traite les .md sans en-tête
+  - jekyll-readme-index            # le README d'un dossier en devient l'index
+  - jekyll-relative-links          # réécrit les liens ../xxx.md vers les URL
+  - jekyll-titles-from-headings    # le titre de la page vient de son H1
+
+optional_front_matter:
+  remove_originals: true
+readme_index:
+  remove_originals: true
+relative_links:
+  enabled: true
+  collections: false
+titles_from_headings:
+  enabled: true
+  strip_title: false               # le H1 reste dans la page, comme sur GitHub
+  collections: false
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+
+defaults:
+  - scope: { path: '' }
+    values: { layout: default }
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor

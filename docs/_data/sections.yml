@@ -1,0 +1,23 @@
+# L'ordre du menu. Les pages de chaque dossier sont listées automatiquement,
+# dans l'ordre de leur numéro : ajouter un fichier suffit, rien à déclarer ici.
+- dir: /00-produit/
+  label: 00 — Produit
+  hint: ce que l'app doit faire
+- dir: /01-conception/
+  label: 01 — Conception
+  hint: comment c'est construit
+- dir: /02-decisions/
+  label: 02 — Décisions
+  hint: les ADR, et leur pourquoi
+- dir: /03-postmortems/
+  label: 03 — Postmortems
+  hint: ce qui a mal tourné
+- dir: /04-lecons/
+  label: 04 — Leçons
+  hint: à lire avant de toucher au son
+- dir: /05-journal/
+  label: 05 — Journal
+  hint: contexte daté, reste à faire
+- dir: /06-sources/
+  label: 06 — Sources
+  hint: les documents du client

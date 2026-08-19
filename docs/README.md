@@ -7,16 +7,16 @@ Studio), accessible par QR code sur la boîte du jeu.
 
 | Si vous cherchez… | Allez voir |
 |---|---|
-| **Les pièges déjà rencontrés** — à lire avant de toucher au son | [`04-lecons/`](04-lecons/) |
-| Ce que l'application doit faire | [`00-produit/02-spec-v1.md`](00-produit/02-spec-v1.md) |
-| Comment le son est censé s'enchaîner | [`01-conception/02-moteur-audio.md`](01-conception/02-moteur-audio.md) |
-| Comment le projet est construit | [`01-conception/01-architecture.md`](01-conception/01-architecture.md) |
-| **Pourquoi** telle chose est faite ainsi | [`02-decisions/`](02-decisions/) |
-| Ce qui a été perdu comme temps, et sur quoi | [`03-postmortems/`](03-postmortems/) |
-| **Ce qui reste à corriger**, par ordre de dégât | [`05-journal/01-reste-a-faire.md`](05-journal/01-reste-a-faire.md) |
-| Ce qui reste en attente du client | [`00-produit/03-questions-ouvertes.md`](00-produit/03-questions-ouvertes.md) |
-| Ce qui s'est passé un jour donné | [`05-journal/`](05-journal/) |
-| Les règles de travail sur ce dépôt | [`../CLAUDE.md`](../CLAUDE.md), [`../CONTRIBUTING.md`](../CONTRIBUTING.md) |
+| **Les pièges déjà rencontrés** — à lire avant de toucher au son | [les leçons](04-lecons/) |
+| Ce que l'application doit faire | [la spec V1](00-produit/02-spec-v1.md) |
+| Comment le son est censé s'enchaîner | [le moteur audio](01-conception/02-moteur-audio.md) |
+| Comment le projet est construit | [l'architecture](01-conception/01-architecture.md) |
+| **Pourquoi** telle chose est faite ainsi | [les décisions (ADR)](02-decisions/) |
+| Ce qui a été perdu comme temps, et sur quoi | [les postmortems](03-postmortems/) |
+| **Ce qui reste à corriger**, par ordre de dégât | [le carnet de dette](05-journal/01-reste-a-faire.md) |
+| Ce qui reste en attente du client | [les questions ouvertes](00-produit/03-questions-ouvertes.md) |
+| Ce qui s'est passé un jour donné | [le journal](05-journal/) |
+| Les règles de travail sur ce dépôt | [`CLAUDE.md`](https://github.com/Wieedze/Loka/blob/main/CLAUDE.md), [`CONTRIBUTING.md`](https://github.com/Wieedze/Loka/blob/main/CONTRIBUTING.md) |
 
 ## Les dossiers
 
@@ -29,6 +29,27 @@ Studio), accessible par QR code sur la boîte du jeu.
 | [`04-lecons/`](04-lecons/) | ce qu'on en a tiré, sous forme de règles réutilisables | **avant de toucher au son** |
 | [`05-journal/`](05-journal/) | le contexte daté, les décisions prises faute de réponse, et le carnet de dette | en reprenant après une pause |
 | [`06-sources/`](06-sources/) | les documents du client, non modifiables | pour vérifier une affirmation à la source |
+
+## Le site publié
+
+Cette documentation est aussi lisible en ligne :
+**<https://wieedze.github.io/Loka/>**
+
+Construite depuis ce dossier à chaque mise à jour de `main`, par
+[`.github/workflows/pages.yml`](https://github.com/Wieedze/Loka/blob/main/.github/workflows/pages.yml).
+Rien à voir avec l'application, qui se déploie sur Cloudflare Pages.
+
+Quatre fichiers de tuyauterie vivent ici et **ne sont pas de la documentation** :
+`_config.yml` (réglages du site), `_layouts/` (le gabarit HTML), `_data/`
+(l'ordre des sections du menu) et `assets/` (la feuille de style).
+
+Le Markdown reste la source : aucun fichier ne porte d'en-tête YAML, tout se lit
+aussi bien dans l'éditeur et sur GitHub. Ajouter une page ne demande rien de
+plus — **le menu se construit tout seul** à partir des dossiers et des numéros.
+
+Une seule règle à respecter pour le site : **un lien qui sort de `docs/`**
+(vers `CLAUDE.md`, `tools/`, un fichier source) **doit être une URL GitHub
+absolue** — un lien relatif tomberait dans le vide une fois publié.
 
 ## Conventions
 
