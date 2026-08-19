@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "mix": {
+    "duckLevel": 0.25,
+    "duckInSec": 1.5,
+    "duckOutSec": 4,
+    "crossfadeSec": 3,
+    "voiceFadeSec": 1
+  },
+  "tracks": [
+    {
+      "id": "accueil",
+      "role": "jingle",
+      "title": "Accueil",
+      "file": "audio/accueil.m4a"
+    },
+    {
+      "id": "tfe",
+      "role": "ambiance",
+      "title": "Terre, Feu, Eau",
+      "file": "audio/tfe.m4a",
+      "loop": true
+    },
+    {
+      "id": "air",
+      "role": "ambiance",
+      "title": "Air",
+      "file": "audio/air.m4a"
+    },
+    {
+      "id": "lucidite",
+      "role": "transition",
+      "title": "Lucidité",
+      "file": "audio/lucidite.m4a"
+    },
+    {
+      "id": "porte",
+      "role": "transition",
+      "title": "Porte",
+      "file": "audio/porte.m4a"
+    },
+    {
+      "id": "renouveau",
+      "role": "ambiance",
+      "title": "Renouveau",
+      "file": "audio/renouveau.m4a"
+    },
+    {
+      "id": "cloture",
+      "role": "cloture",
+      "title": "Clôture",
+      "file": "audio/cloture.m4a"
+    },
+    {
+      "id": "med-01",
+      "role": "meditation",
+      "title": "Méditation I",
+      "file": "audio/med-01.m4a"
+    },
+    {
+      "id": "med-02",
+      "role": "meditation",
+      "title": "Méditation II",
+      "file": "audio/med-02.m4a"
+    },
+    {
+      "id": "med-03",
+      "role": "meditation",
+      "title": "Méditation III",
+      "file": "audio/med-03.m4a"
+    },
+    {
+      "id": "mantra-01",
+      "role": "mantra",
+      "title": "Mantra I",
+      "file": "audio/mantra-01.m4a"
+    },
+    {
+      "id": "mantra-02",
+      "role": "mantra",
+      "title": "Mantra II",
+      "file": "audio/mantra-02.m4a"
+    },
+    {
+      "id": "mantra-03",
+      "role": "mantra",
+      "title": "Mantra III",
+      "file": "audio/mantra-03.m4a"
+    }
+  ]
+}
