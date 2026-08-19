@@ -37,16 +37,32 @@ Les deux se branchent sur les mêmes bus, le reste du moteur ne voit pas la diff
 
 ## Architecture du moteur audio
 
+Deux plans, et un seul se baisse. Le **fond** — ambiances et mantras — s'efface
+quand une voix parle ; la **voix** va droit à la sortie, puisque c'est elle que
+le reste laisse passer.
+
 ```
-                    ┌─ StreamPlayer (TFE / Air / Renouveau / méditations)
-  ambianceBus ──┐   ├─ BufferPlayer (jingle, Porte, clôture, Lucidité)
-  voiceBus ─────┼── masterGain ── destination
-  mantraBus ────┘
+  ambiances ─┐
+             ├─► fond (le seul gain qui bouge) ─┐
+  mantras ───┘                                  ├─► destination
+                                                │
+  méditations, jingle, Porte, clôture ──────────┘
 ```
 
-- **Ducking** : au démarrage d'une méditation, rampe de gain sur `ambianceBus` (+ `mantraBus`) vers ~0.25 en ~1,5 s ; retour progressif en ~4 s à la fin. Valeurs dans le manifeste, pas en dur.
-- **Crossfade** : `engine.crossfade(from, to, seconds)` — utilisé pour TFE → Air (passage Lucidité) et mantra → mantra.
-- **Boucle TFE sans couture** : deux StreamPlayers en alternance ; à l'approche de la fin du A, le B démarre en fondu croisé (~2 s). `loop=true` natif a un blanc audible sur certains navigateurs.
+Chaque lecteur porte en plus son propre gain, pour ses fondus d'entrée et de
+sortie. Le bus du fond, lui, ne sert qu'au ducking.
+
+- **Ducking** : une seule rampe, sur le fond, vers `duckLevel` en `duckInSec` ;
+  retour en `duckOutSec` à la fin. Plusieurs voix peuvent se superposer :
+  `updateDuck()` recalcule la cible à partir de l'état, donc la dernière voix à
+  finir est celle qui relève le fond.
+- **Fondu croisé** : l'ancienne piste descend pendant que la nouvelle monte,
+  chacune sur son propre gain. Utilisé pour TFE → Air et mantra → mantra.
+- **Boucle TFE sans couture** : deux StreamPlayers en alternance ; à l'approche
+  de la fin du A, le B démarre en fondu croisé. `loop=true` natif a un blanc
+  audible sur certains navigateurs.
+- **Un fondu part quand le son sort**, jamais quand on le demande : la règle
+  vit dans `FadingPlayer.play()`, un seul endroit pour tous les lecteurs.
 - Le moteur est du **TypeScript pur, zéro React, zéro DOM direct sauf `<audio>`** → testable, et la charte/UI peut changer sans le toucher.
 
 ## Machine d'état du voyage
