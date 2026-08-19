@@ -2,6 +2,8 @@ import type { GlypheName } from './Glyphe';
 import { Glyphe } from './Glyphe';
 
 interface NoeudProps {
+  /** Repère stable pour retrouver le nœud au moment de l'animer. */
+  cle?: string;
   label: string;
   glyphe: GlypheName;
   /** Degrees clockwise from the top of the mandala. */
@@ -22,6 +24,7 @@ interface NoeudProps {
 }
 
 export function Noeud({
+  cle,
   label,
   glyphe,
   angle,
@@ -43,6 +46,7 @@ export function Noeud({
     <button
       type="button"
       className="noeud"
+      data-cle={cle}
       data-actif={actif}
       data-attendu={attendu}
       data-petit={petit}

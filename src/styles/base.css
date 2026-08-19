@@ -469,3 +469,134 @@ button:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- Page d'un élément ---------- */
+
+.voyage[data-ouvert='true'] {
+  justify-content: flex-start;
+  padding-top: clamp(3.5rem, 9vh, 5.5rem);
+}
+
+.page-element {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(1rem + env(safe-area-inset-top)) 1.5rem calc(1.5rem + env(safe-area-inset-bottom));
+  pointer-events: none;
+  /* Posé par GSAP à l'ouverture ; invisible tant qu'il n'a pas joué. */
+  opacity: 0;
+  visibility: hidden;
+}
+
+.page-element > * {
+  pointer-events: auto;
+}
+
+.retour {
+  position: absolute;
+  top: calc(0.75rem + env(safe-area-inset-top));
+  left: 0.5rem;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  display: grid;
+  place-items: center;
+  color: var(--color-muted);
+  transition: color var(--fondu-court) var(--courbe);
+}
+
+.retour:hover {
+  color: var(--color-text);
+}
+
+.retour svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* L'icône du mandala vient occuper cette place : on lui laisse le champ. */
+.page-element-titre {
+  margin-top: clamp(14rem, 46vh, 22rem);
+  text-align: center;
+}
+
+.page-element-cardinal {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.32em;
+  color: var(--color-muted);
+  opacity: 0.5;
+}
+
+.page-element-titre h2 {
+  margin: 0.5rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  text-transform: uppercase;
+}
+
+.page-element-texte {
+  margin: 1.1rem 0 0;
+  max-width: 30ch;
+  text-align: center;
+  line-height: 1.7;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.page-element-marque {
+  display: none;
+}
+
+.page-element-pied {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.lecture {
+  width: 4.5rem;
+  height: 4.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  transition:
+    background-color var(--fondu-court) var(--courbe),
+    scale var(--fondu-court) var(--courbe);
+}
+
+.lecture:active {
+  scale: 0.94;
+}
+
+.lecture-glyphe svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  display: block;
+}
+
+.lecture-etat {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* Le nœud promu au centre : une lueur discrète, jamais un projecteur. */
+.voyage[data-ouvert='true'] .noeud[data-actif='true'] .noeud-cercle,
+.voyage[data-ouvert='true'] .noeud .noeud-cercle {
+  box-shadow: 0 0 3.5rem color-mix(in srgb, var(--teinte, var(--color-accent)) 26%, transparent);
+}
+
+.voyage[data-ouvert='true'] .noeud-label,
+.voyage[data-ouvert='true'] .noeud-cardinal {
+  opacity: 0;
+}
