@@ -88,6 +88,23 @@ Règle générale : **une ambiance ne démarre et ne s'arrête jamais autrement 
 fondu ; une voix démarre net** (on ne fait pas apparaître une parole
 progressivement) **et ne s'arrête qu'en fondu court.**
 
+## Baisser le son : deux gestes à ne pas confondre
+
+| | Sortie | Ducking |
+|---|---|---|
+| Ce qu'on entend | descend à zéro, puis plus rien | descend à 25 %, puis remonte |
+| Ce qui se passe | la piste est **coupée** après le fondu | la piste **n'a jamais cessé** de jouer |
+| Dans le code | `fadeOutAndStop()` | `updateDuck()` |
+| Quand | changement d'ambiance, arrêt d'une voix, Porte | une voix passe au premier plan |
+
+Un fondu de sortie n'est pas terminé quand le gain atteint zéro : la piste tourne
+encore et continue de consommer batterie et réseau. Le moteur programme donc
+toujours l'arrêt une fois le fondu écoulé. C'est vérifié par un test.
+
+Les placeholders de développement sont des **tons tenus à volume constant**, une
+hauteur par piste. C'est délibéré : un placeholder qui pulse (trémolo) masque
+complètement les fondus et rend tout enchaînement illisible à l'oreille.
+
 ## Vérifier de ses oreilles
 
 `bun run dev` puis **`/diagnostic`** : une page hors application qui joue de

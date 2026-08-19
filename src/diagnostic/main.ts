@@ -12,8 +12,16 @@ root.innerHTML = `
   <main>
     <h1>Diagnostic du son</h1>
     <p class="aide">
-      Le tracé est le niveau <em>mesuré en sortie</em>, pas la valeur demandée :
-      si la courbe monte en pente douce, le fondu s'entend.
+      Deux sons tenus, à volume constant : un <strong>grave</strong> (110 Hz) et
+      un <strong>aigu</strong> (330 Hz). Le tracé est le niveau
+      <em>mesuré en sortie</em>, pas la valeur demandée. Une pente douce = un
+      fondu qui s'entend ; une marche verticale = un fondu qui ne se fait pas.
+    </p>
+    <p class="aide">
+      Deux gestes à ne pas confondre : une <strong>sortie</strong> descend à zéro
+      <em>puis coupe la piste</em> — elle ne remontera pas. Un
+      <strong>ducking</strong> descend au niveau de la voix, puis remonte tout
+      seul : la piste n'a jamais cessé de jouer.
     </p>
 
     <label class="duree">
@@ -22,10 +30,11 @@ root.innerHTML = `
     </label>
 
     <div class="actions">
-      <button id="entree" type="button">Fondu d'entrée</button>
-      <button id="croiser" type="button">Fondu croisé vers Air</button>
-      <button id="sortie" type="button">Fondu de sortie</button>
-      <button id="stop" type="button">Tout couper</button>
+      <button id="entree" type="button">1 · Entrée du grave</button>
+      <button id="croiser" type="button">2 · Croiser grave → aigu</button>
+      <button id="sortie" type="button">3 · Sortie (fondu puis coupure)</button>
+      <button id="ducking" type="button">Ducking (baisse puis remonte)</button>
+      <button id="stop" type="button">Couper net</button>
     </div>
 
     <canvas id="trace" width="900" height="220"></canvas>
@@ -89,7 +98,7 @@ function boucleDeTrace(): void {
     dessin.beginPath();
     points.forEach((p, i) => {
       // Échelle : le RMS d'une ambiance est faible, on amplifie pour voir la forme.
-      const y = height - Math.min(1, p * 12) * (height - 8) - 4;
+      const y = height - Math.min(1, p * 4) * (height - 8) - 4;
       if (i === 0) dessin.moveTo(i, y);
       else dessin.lineTo(i, y);
     });
@@ -121,7 +130,22 @@ document.getElementById('croiser')?.addEventListener('click', () => {
 });
 
 document.getElementById('sortie')?.addEventListener('click', () => {
-  entree?.fadeTo(0, duree());
+  const joueur = entree;
+  if (!joueur) return;
+  entree = null;
+  const secondes = duree();
+  joueur.fadeTo(0, secondes);
+  // Un fondu de sortie n'est pas fini quand le gain atteint zéro : la piste
+  // tourne encore. On la coupe une fois le fondu terminé.
+  window.setTimeout(() => joueur.stop(), (secondes + 0.1) * 1000);
+});
+
+document.getElementById('ducking')?.addEventListener('click', () => {
+  const joueur = entree;
+  if (!joueur) return;
+  // Le fond s'efface vite pour laisser passer la voix, puis revient lentement.
+  joueur.fadeTo(0.25, 1.5);
+  window.setTimeout(() => joueur.fadeTo(1, 4), 3000);
 });
 
 document.getElementById('stop')?.addEventListener('click', () => {
