@@ -13,6 +13,16 @@ voyage sonore décrit ci-dessous.
 Ce n'est **pas** un site vitrine du jeu : ni boutique, ni pages de présentation
 ou de presse. Si un tel site devenait nécessaire, ce serait un projet distinct.
 
+## Droits sur le son
+
+Confirmé le 15/09/2026. Les musiques et les voix appartiennent à **Oddwave
+Studio**, qui les a créées : l'ingénieur du son et l'artiste. Il n'y a pas
+d'ayant droit tiers à consulter pour la diffusion en ligne.
+
+À prévoir au contrat : une autorisation écrite de diffusion en ligne, y compris
+pour les futures extensions. Une clause suffit ; elle nous couvre en tant
+qu'hébergeur du site.
+
 ## Inventaire audio (fourni par Oddwave, masters WAV)
 
 | Piste | Quantité | Durée | Notes |

@@ -14,7 +14,6 @@ attendant**. Toutes envoyées au client le 19/08/2026, sans réponse à ce jour.
 | **Q3** | Comment présenter les 10 méditations : titres, numéros, lien avec les cases du plateau ? Les mantras sont-ils choisis ou enchaînés ? | Liste simple depuis le manifeste, dans l'ordre du fichier. | [ADR 0010](../02-decisions/0010-manifeste-json.md) |
 | **Q4** | Peut-on lancer un mantra pendant une méditation ? *(notre proposition : non)* | Autorisé, mais le mantra est **ducké comme le reste du fond**. | [ADR 0007](../02-decisions/0007-deux-plans-de-mixage.md) |
 | **Q5** ⚠️ | Date limite de l'imprimeur ? | Rien à décider : c'est une date, pas un choix. Voir ci-dessous. | — |
-| **Q6** | Droits sur les musiques et les voix : la diffusion en ligne est-elle couverte par les contrats existants ? | Rien — question juridique, pas technique. | — |
 | **Q7** | Budget : le client demande une V1 « budget minimum ». | Devis à produire (dev + domaine/QR/hébergement + option maintenance). | [cadrage](01-cadrage-client.md) |
 
 ## Q5 est le seul vrai point bloquant
@@ -42,10 +41,8 @@ Un second questionnaire est parti, orienté chiffrage :
 restées sans réponse depuis août : la date limite de l'imprimeur (Q5, devenue
 C2) et l'enveloppe budgétaire (Q7, devenue F1).
 
-**Q6, les droits sur les musiques et les voix, n'est plus posée nulle part** :
-elle a été retirée du questionnaire de devis. Si les contrats existants ne
-couvrent pas la diffusion en ligne, cela se découvrira tard. À reposer
-directement, hors questionnaire.
+Q6, les droits sur les musiques et les voix, a été répondue le 15/09/2026 et
+figure désormais dans la [spec](02-spec-v1.md#droits-sur-le-son).
 
 ## Tenir cette liste
 
