@@ -4,6 +4,15 @@ Source : [`../06-sources/02-reponse-oddwave-boutons.pdf`](../06-sources/02-repon
 Cadrage initial : [`01-cadrage-client.md`](01-cadrage-client.md).
 Ce qui reste en suspens : [`03-questions-ouvertes.md`](03-questions-ouvertes.md).
 
+## Périmètre — confirmé le 15/09/2026
+
+Le livrable est **un site mobile unique**, ouvert depuis le QR code de la boîte
+ou depuis son adresse, et consulté sur téléphone pendant la partie. Il porte le
+voyage sonore décrit ci-dessous.
+
+Ce n'est **pas** un site vitrine du jeu : ni boutique, ni pages de présentation
+ou de presse. Si un tel site devenait nécessaire, ce serait un projet distinct.
+
 ## Inventaire audio (fourni par Oddwave, masters WAV)
 
 | Piste | Quantité | Durée | Notes |
