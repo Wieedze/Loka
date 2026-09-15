@@ -35,6 +35,18 @@ le QR imprimé ne meure. Voir
 | App publique ou accès réservé ? | Public, sauf demande contraire du client. |
 | Statistiques d'usage anonymes ? | Proposé en option dans le devis, pas implémenté. |
 
+## Questionnaire de devis, envoyé le 15/09/2026
+
+Un second questionnaire est parti, orienté chiffrage :
+[`04-questions-devis.md`](04-questions-devis.md). Il reprend deux questions
+restées sans réponse depuis août : la date limite de l'imprimeur (Q5, devenue
+C2) et l'enveloppe budgétaire (Q7, devenue F1).
+
+**Q6, les droits sur les musiques et les voix, n'est plus posée nulle part** :
+elle a été retirée du questionnaire de devis. Si les contrats existants ne
+couvrent pas la diffusion en ligne, cela se découvrira tard. À reposer
+directement, hors questionnaire.
+
 ## Tenir cette liste
 
 - Une question qui reçoit une réponse **sort du tableau** : la réponse va dans
