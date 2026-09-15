@@ -13,27 +13,27 @@ ouvertes, aucun montant ferme n'est possible.
 
 ---
 
-## A. Le périmètre — qu'est-ce qui est à livrer
+## A. Ce que le site contient, autour du voyage sonore
 
-> C'est la question qui pèse le plus lourd : selon la réponse, le projet peut
-> doubler de volume.
+> Le périmètre principal est arrêté : **un site mobile unique**, ouvert par le QR
+> code de la boîte ou par son adresse, qui accompagne la partie. Reste à savoir
+> ce qu'il contient en plus du voyage lui-même — c'est là que le volume varie.
 
-- **A1 ⚠️** Que devons-nous livrer exactement :
-  - **a)** uniquement l'**application sonore** qui accompagne la partie
-    (accessible par le QR code de la boîte) ;
-  - **b)** uniquement un **site de présentation** du jeu (le présenter, le
-    vendre ou renvoyer vers un revendeur, la presse, le contact) ;
-  - **c)** **les deux** ?
-- **A2** Si un site de présentation est attendu : combien de pages, et
-  lesquelles ? (accueil, le jeu, les autrices, où l'acheter, contact, presse…)
-- **A3** Le site doit-il **vendre le jeu directement** (paiement en ligne,
-  gestion des commandes et des expéditions), ou seulement renvoyer vers une
-  boutique ou un distributeur existant ?
-- **A4** Y a-t-il d'autres supports attendus dans la même enveloppe : règles du
-  jeu en ligne, tutoriel vidéo, page de campagne de financement, collecte
-  d'adresses e-mail ?
-- **A5** Au-delà du QR code de la boîte, l'application doit-elle être trouvable
-  autrement (adresse communiquée seule, lien depuis le site, réseaux sociaux) ?
+- **A1 ⚠️** Outre les écrans de jeu, le site doit-il comporter d'autres pages :
+  rappel des règles ou mode d'emploi, présentation de La Loka et de ses
+  autrices, mentions et remerciements, page de contact ? Si oui, lesquelles ?
+- **A2** Une page doit-elle **renvoyer vers l'achat du jeu** (lien vers une
+  boutique ou un distributeur) ? Il ne s'agit pas de vendre depuis le site, mais
+  d'un simple renvoi.
+- **A3** Le site doit-il permettre de **laisser une trace** : formulaire de
+  contact, inscription à une lettre d'information, retour d'expérience après une
+  partie ?
+- **A4** Faut-il prévoir un écran de **première visite** — ce qu'est
+  l'application, comment s'en servir, poser le téléphone au centre de la table —
+  ou entre-t-on directement dans le voyage ?
+- **A5** L'adresse doit-elle être **communicable seule**, en dehors du QR code
+  (sur un carton, un site tiers, les réseaux) ? Cela change le choix du nom de
+  domaine.
 
 ## B. Le contenu — ce que vous fournissez, ce que nous produisons
 
@@ -125,21 +125,23 @@ ouvertes, aucun montant ferme n'est possible.
 
 Si vous ne deviez répondre qu'à quatre questions, ce sont celles-ci :
 
-1. **A1** — application sonore seule, site de présentation, ou les deux.
-2. **B4** — la charte graphique est-elle utilisable en l'état, ou à créer.
-3. **E4** — devez-vous pouvoir ajouter du contenu vous-mêmes.
+1. **B4** — la charte graphique est-elle utilisable en l'état, ou à créer.
+2. **E4** — devez-vous pouvoir ajouter du contenu vous-mêmes, plus tard.
+3. **A1** — y a-t-il des pages en plus des écrans de jeu.
 4. **C2** — la date limite de l'imprimeur.
+5. **F1** — l'enveloppe dont vous disposez.
 
-Les trois premières déterminent le volume de travail. La quatrième détermine si
-le projet est tenable dans le calendrier, et à quel rythme.
+Les trois premières déterminent le volume de travail. La quatrième dit si le
+projet est tenable dans le calendrier. La cinquième nous évite de vous proposer
+à côté.
 
 ## Ce que nous vous proposerons en face
 
 Le devis distinguera :
 
 - un **socle** : ce qui est indispensable à une première version qui fonctionne ;
-- des **options chiffrées séparément**, que vous activez ou non : site de
-  présentation, multilingue, interface d'ajout de contenu, statistiques,
+- des **options chiffrées séparément**, que vous activez ou non : pages
+  additionnelles, multilingue, interface d'ajout de contenu, statistiques,
   maintenance annuelle ;
 - les **coûts récurrents** (domaine, hébergement), isolés du reste pour que vous
   sachiez ce que le projet coûte chaque année.
