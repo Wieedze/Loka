@@ -44,6 +44,22 @@ C2) et l'enveloppe budgétaire (Q7, devenue F1).
 Q6, les droits sur les musiques et les voix, a été répondue le 15/09/2026 et
 figure désormais dans la [spec](02-spec-v1.md#droits-sur-le-son).
 
+## Réponses du 16/10/2026
+
+Le client a répondu au questionnaire de devis ([PDF](../06-sources/07-reponse-questionnaire-devis.pdf)).
+Les réponses sont reprises dans la proposition
+([`05-devis-prototype.md`](05-devis-prototype.md)). Les points qui restent
+ouverts y figurent en fin de document :
+
+- comment s'enchaînent le monde d'en bas, le monde d'en haut, le Tambour et le
+  Renouveau pendant une partie, et qui les déclenche ;
+- la durée des deux bandes-son, et si elles doivent se répéter ;
+- le format de livraison des fichiers, à voir avec Théo ;
+- la spirale pour les mantras, alors qu'elle figure aussi au centre du plateau.
+
+Q1 à Q4 d'août portent sur un parcours qui n'existe plus : elles tombent avec la
+réunion de cadrage du prototype.
+
 ## Tenir cette liste
 
 - Une question qui reçoit une réponse **sort du tableau** : la réponse va dans

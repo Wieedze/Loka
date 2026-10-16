@@ -27,6 +27,8 @@ for ligne in brut:
         blocs.append(('hr', 0, ''))
     elif nu.startswith('> '):
         blocs.append(('cite', 0, nu[2:]))
+    elif nu.startswith('|') and nu.endswith('|'):
+        blocs.append(('tr', 0, nu))
     elif mp:
         blocs.append(('puce', len(mp.group(1)), mp.group(2)))
     elif mn:
@@ -51,7 +53,31 @@ def fermer_cite():
         out.append('</blockquote>')
         cite = False
 
+tableau = False
+def fermer_tableau():
+    global tableau
+    if tableau:
+        out.append('</tbody></table>')
+        tableau = False
+
 for typ, ind, txt in blocs:
+    if typ == 'tr':
+        cellules = [c.strip() for c in txt.strip('|').split('|')]
+        if all(set(c) <= set('-: ') and c for c in cellules):
+            continue                      # la ligne de séparation
+        if not tableau:
+            fermer_listes(); fermer_cite()
+            out.append('<table><thead>')
+            out.append('<tr>' + ''.join(f'<th>{inline(c)}</th>' for c in cellules) + '</tr>')
+            out.append('</thead><tbody>')
+            tableau = True
+        else:
+            rendu = [inline(c) for c in cellules]
+            # Une ligne de total se reconnaît à sa mise en gras, pas à sa place.
+            classe = ' class="total"' if any('<strong>' in c for c in rendu) else ''
+            out.append(f'<tr{classe}>' + ''.join(f'<td>{c}</td>' for c in rendu) + '</tr>')
+        continue
+    fermer_tableau()
     if typ in ('puce', 'num'):
         fermer_cite()
         while pile and pile[-1][0] > ind:
@@ -74,7 +100,7 @@ for typ, ind, txt in blocs:
     elif typ == 'h2':   out.append(f'<h2>{inline(txt)}</h2>')
     elif typ == 'h3':   out.append(f'<h3>{inline(txt)}</h3>')
     else:               out.append(f'<p>{inline(txt)}</p>')
-fermer_listes(); fermer_cite()
+fermer_listes(); fermer_cite(); fermer_tableau()
 
 CSS = """
 :root{--ink:#23282E;--muted:#5C636B;--line:#DDDBD4;--accent:#386B66;--gold:#8F6E33;--gold-soft:#F1E9DA;--surface:#FAF9F6}
@@ -98,6 +124,12 @@ ul.num>li{counter-increment:n;padding-left:1.7rem}
 ul.num>li:before{content:counter(n);background:none;color:var(--gold);font-weight:700;font-size:9pt;top:.34rem;width:auto;height:auto;border-radius:0}
 strong{font-weight:600}
 em{color:var(--muted)}
+table{width:100%;border-collapse:collapse;margin:.7rem 0;font-variant-numeric:tabular-nums;break-inside:avoid}
+th{text-align:left;font-size:8pt;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600;padding:0 .7rem .35rem 0;border-bottom:1px solid var(--line)}
+th:last-child,td:last-child{text-align:right;padding-right:0}
+td{padding:.4rem .7rem .4rem 0;border-bottom:1px solid var(--line)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.total td{border-top:1.5px solid var(--ink);border-bottom:0;padding-top:.5rem}
 code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:9pt;background:var(--gold-soft);padding:0 .25rem;border-radius:3px}
 """
 open(dst,'w',encoding='utf8').write(
