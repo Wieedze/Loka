@@ -2,20 +2,20 @@
 
 Proposition du 16 octobre 2026. Valable deux mois.
 
-## Ce que nous avons compris
+## Ce que j'ai compris
 
 Vous souhaitez un prototype utilisable pendant vos phases de test, pas une
 version définitive. Il doit faire vivre le parcours sonore sur un téléphone, à
 partir des sons, des textes et des visuels que vous fournissez. Les choix
 d'ampleur viendront plus tard, avec la maison d'édition.
 
-La proposition ci-dessous est construite sur ce principe : le strict nécessaire
-pour tester, rien de plus, et de quoi évoluer ensuite sans tout reprendre.
+J'ai donc construit cette proposition au plus juste : le strict nécessaire pour
+tester, rien de plus, et de quoi évoluer ensuite sans tout reprendre.
 
-Un point utile à savoir : un moteur sonore a déjà été construit et éprouvé lors
+Un point utile à savoir : j'ai déjà construit et éprouvé un moteur sonore lors
 d'une étude préalable, avec les enchaînements que demande La Loka (fondus,
 baisse automatique du fond pendant une voix, bande-son qui se répète sans
-coupure). C'est ce qui rend ce délai et ce tarif possibles.
+coupure). C'est ce qui me permet de proposer ce délai et ce tarif.
 
 ## Ce que comprend le prototype
 
@@ -23,7 +23,7 @@ coupure). C'est ce qui rend ce délai et ce tarif possibles.
 
 Un écran d'accueil, un écran d'aide très court expliquant comment accéder aux
 sons, l'écran de jeu qui porte le parcours, et le choix des méditations et des
-mantras. Vos textes sont intégrés tels que vous nous les transmettez.
+mantras. J'intègre vos textes tels que vous me les transmettez.
 
 **Le parcours sonore**
 
@@ -38,19 +38,19 @@ partie se prolonge.
 
 **L'interface**
 
-Une interface simple et cohérente, construite à partir de vos visuels existants
-(plateau, cartes, symboles, dont le lotus des méditations et la spirale des
-mantras). Il ne s'agit pas d'une direction artistique complète, mais d'une mise
-en forme sobre, lisible sur un téléphone posé au centre de la table.
+Une interface simple et cohérente, que je construis à partir de vos visuels
+existants (plateau, cartes, symboles, dont le lotus des méditations et la
+spirale des mantras). Il ne s'agit pas d'une direction artistique complète, mais
+d'une mise en forme sobre, lisible sur un téléphone posé au centre de la table.
 
 **L'accès**
 
 Une adresse web provisoire, accompagnée d'un QR code, pour que vos testeurs
-ouvrent l'application sans installer quoi que ce soit.
+ouvrent l'application sans rien installer.
 
 **Les tests**
 
-Vérification sur de vrais téléphones, iPhone et Android, et correction de ce qui
+Je vérifie sur de vrais téléphones, iPhone et Android, et je corrige ce qui
 remonte.
 
 ## Ce qui n'est pas compris
@@ -64,13 +64,13 @@ direction artistique complète. Ces points figurent en options ci-dessous.
 
 | Poste | Montant HT |
 |---|---|
-| Cadrage du parcours sonore et organisation des 25 pistes | 700 € |
-| Adaptation du moteur sonore au parcours de La Loka | 700 € |
-| Écrans : accueil, aide, jeu, choix des méditations et des mantras | 1 100 € |
-| Intégration de vos textes, visuels et sons | 400 € |
-| Mise en ligne, adresse provisoire et QR code | 250 € |
-| Tests sur téléphones réels et corrections | 450 € |
-| **Total** | **3 600 € HT** |
+| Cadrage du parcours sonore et organisation des 25 pistes | 450 € |
+| Adaptation du moteur sonore au parcours de La Loka | 450 € |
+| Écrans : accueil, aide, jeu, choix des méditations et des mantras | 700 € |
+| Intégration de vos textes, visuels et sons | 300 € |
+| Mise en ligne, adresse provisoire et QR code | 150 € |
+| Tests sur téléphones réels et corrections | 250 € |
+| **Total** | **2 300 € HT** |
 
 Règlement : 30 % à la commande, le solde à la livraison.
 
@@ -89,18 +89,18 @@ Chiffrées à part, activables plus tard sans refaire l'existant.
 ## Les frais qui reviennent chaque année
 
 Nom de domaine : environ 15 € par an, si vous souhaitez une adresse définitive.
-Pour les tests, une adresse provisoire est fournie sans frais.
+Pour les tests, je fournis une adresse provisoire sans frais.
 
-Hébergement : gratuit pour le volume du prototype. Nous avons retenu une
-solution qui reste sans frais tant que l'audience est celle de vos tests, et qui
-pourra accompagner la sortie du jeu sans changer d'adresse.
+Hébergement : gratuit pour le volume du prototype. J'ai retenu une solution qui
+reste sans frais tant que l'audience est celle de vos tests, et qui pourra
+accompagner la sortie du jeu sans changer d'adresse.
 
 ## Le délai
 
-Quatre semaines à compter de la réception des sons et des textes.
+Trois semaines à compter de la réception des sons et des textes.
 
 Ce délai suppose que le parcours sonore soit arrêté lors de la réunion de
-cadrage, et que vos retours nous parviennent sous une semaine à chaque étape.
+cadrage, et que vos retours me parviennent sous une semaine à chaque étape.
 
 ## Les allers-retours compris
 
@@ -110,21 +110,20 @@ journée.
 
 ## Les corrections après livraison
 
-Les défauts constatés sont corrigés sans frais pendant deux mois après la
-livraison.
+Je corrige sans frais les défauts constatés pendant un mois après la livraison.
 
-Au-delà, ou pour une évolution, les interventions se font à la demande : 450 €
-HT la journée, 250 € HT la demi-journée. Aucun forfait annuel n'est imposé.
+Au-delà, ou pour une évolution, j'interviens à la demande : 450 € HT la journée,
+250 € HT la demi-journée. Je ne vous impose aucun forfait annuel.
 
 ## Vos droits sur le projet
 
 Vous gardez la maîtrise du projet. À la livraison et après règlement complet,
 vous disposez de l'ensemble des droits d'utilisation et de modification.
 
-Les fichiers sources vous sont remis, avec l'historique du travail, et vous
-pouvez les confier à un autre prestataire à tout moment. Les accès à
-l'hébergement et au nom de domaine vous sont transmis, et peuvent être mis à
-votre nom sur simple demande.
+Je vous remets les fichiers sources avec l'historique du travail, et vous pouvez
+les confier à un autre prestataire à tout moment. Je vous transmets les accès à
+l'hébergement et au nom de domaine, et je peux les mettre à votre nom sur simple
+demande.
 
 ## Ce qu'il reste à caler avant de démarrer
 
@@ -133,13 +132,13 @@ Une réunion d'une heure avec vous et Théo suffit.
 L'inventaire a évolué depuis nos échanges d'août : les deux bandes-son
 s'appellent désormais le monde d'en bas et le monde d'en haut, le rituel du
 Tambour apparaît, et le passage de Lucidité, la Porte et le message de clôture
-n'y figurent plus. Nous avons besoin de savoir comment ces éléments s'enchaînent
+n'y figurent plus. J'ai besoin de savoir comment ces éléments s'enchaînent
 pendant une partie, et à quel moment le joueur les déclenche.
 
-Nous aurons aussi besoin de la durée approximative des deux bandes-son, de
-savoir si elles doivent se répéter quand la partie se prolonge, et du format
-dans lequel Théo nous livrera les fichiers.
+J'aurai aussi besoin de la durée approximative des deux bandes-son, de savoir si
+elles doivent se répéter quand la partie se prolonge, et du format dans lequel
+Théo me livrera les fichiers.
 
-Enfin, vous associez la spirale aux mantras et le lotus aux méditations. Nous
-voulons confirmer ce point avec vous, car la spirale figure aussi au centre du
+Enfin, vous associez la spirale aux mantras et le lotus aux méditations. Je
+voudrais confirmer ce point avec vous, car la spirale figure aussi au centre du
 plateau.
