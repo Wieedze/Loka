@@ -1,5 +1,32 @@
 # La Loka — Spec V1 (d'après la réponse client du 19/08/2026)
 
+> **Attention, périmètre dépassé depuis le 16/10/2026.** Le client demande
+> désormais un **prototype de test**, avec un parcours sonore différent de celui
+> décrit ci-dessous. Voir [`05-devis-prototype.md`](05-devis-prototype.md) et
+> l'écart résumé juste en dessous. Les règles de mixage, elles, restent valables.
+
+## Écart entre la spec d'août et la demande d'octobre
+
+| Août 2026 (ci-dessous) | Octobre 2026 (prototype) |
+|---|---|
+| Ambiance Terre, Feu, Eau | Bande-son du **monde d'en bas** |
+| Ambiance Air | Bande-son du **monde d'en haut** |
+| Ambiance Lucidité (passage) | supprimée |
+| Ambiance Porte | supprimée |
+| Message de clôture | supprimé |
+| — | **Rituel du Tambour**, nouveau |
+| Univers Renouveau | conservé |
+| Jingle d'accueil | conservé |
+| 10 méditations, symbole lotus | conservé |
+| 10 mantras, symbole oreille | 10 mantras, symbole **spirale** |
+| 27 pistes | **25 pistes** |
+
+Conséquence sur ce qui est construit : le moteur sonore et les règles de mixage
+restent valables tels quels. En revanche le mandala à quatre éléments aux points
+cardinaux ne correspond plus : il y a désormais deux mondes, pas quatre
+éléments. L'écran de jeu est à reprendre une fois le parcours arrêté avec le
+client et Théo.
+
 Source : [`../06-sources/02-reponse-oddwave-boutons.pdf`](../06-sources/02-reponse-oddwave-boutons.pdf) (Dorine & Morgane).
 Cadrage initial : [`01-cadrage-client.md`](01-cadrage-client.md).
 Ce qui reste en suspens : [`03-questions-ouvertes.md`](03-questions-ouvertes.md).
